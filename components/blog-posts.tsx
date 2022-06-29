@@ -1,5 +1,5 @@
 import { VStack, Heading, Link, Flex } from "@chakra-ui/react";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import NextLink from "next/link"
 import { PostPreview } from "./post-preview";
 

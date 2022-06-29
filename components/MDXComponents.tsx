@@ -1,4 +1,4 @@
-import { Heading, Text, Link, Code, ListItem, UnorderedList, OrderedList, Image, useColorModeValue } from "@chakra-ui/react";
+import { Heading, Text, Link, Code, ListItem, UnorderedList, OrderedList, Image } from "@chakra-ui/react";
 
 // Sets styles and assigns Chakra components to the next-mdx-remote HTML generator.
 const styles = {
