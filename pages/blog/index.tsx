@@ -61,7 +61,7 @@ const Blog: NextPage<Props> = ({ posts }) => {
       }
     }, 100);
     return () => clearTimeout(timeoutId);
-  }, [searchStr]);
+  }, [searchStr, posts]);
 
   return (
     <>
