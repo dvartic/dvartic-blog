@@ -9,7 +9,7 @@ export function Footer({propMt, propMb}: Props) {
     return (
         <footer>
             <Box mt={propMt} mb={propMb}>
-                <Text textAlign='center'>© 2022 Dvartic. All Rights Reserved</Text>
+                <Text textAlign='center'>2022 Dvartic. This work is uncopyrighted.</Text>
             </Box>
         </footer>
     )

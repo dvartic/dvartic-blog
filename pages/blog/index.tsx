@@ -71,7 +71,7 @@ const Blog: NextPage<Props> = ({ posts }) => {
         <meta name="description" content="Welcome to my blog! I am a front-end web developer with specialties in React and Next.js" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <Search propWidth={'90%'} propMaxWidth={'1200px'} propMt={14} propMb={14} handleChange={handleChange} />
+      <Search propWidth={'90%'} propMaxWidth={'1200px'} propMt={14} propMb={14} handleChange={handleChange} searchStr={searchStr} />
       <BlogPosts propWidth={'90%'} propMaxWidth={'1200px'} propMt={14} propMb={14} pageSrc={'blog'} posts={filteredPosts} />
     </>
   )
