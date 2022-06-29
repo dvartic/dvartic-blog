@@ -1,0 +1,109 @@
+---
+title: 'Implement a Dark and Light theme in rehype-highlight'
+subtitle: 'A guide on how to do it'
+date: '2022-06-28'
+tag: ['Guides', 'highlight']
+image: '/images/post-images/rehype-highlight.png'
+---
+
+## What is rehype-highlight?
+
+`rehype-highlight` is a plugin for the `rehype` HTML processor that provides syntax highlighting for `<code>` blocks.
+
+One common way to use this plugin is with Markdown compilers that use `rehype` and convert Markdown into HTML or JavaScript. For example, if you use Next.js and the library `next-mdx-remote` to load and process Markdown, you will tell your library to use `rehype-highlight` like this:
+
+```js
+serialize(
+  // Raw MDX contents as a string
+  '# hello, world',
+  // Optional parameters
+  {
+    // made available to the arguments of any custom mdx component
+    scope: {},
+    // MDX's available options, see the MDX docs for more info.
+    // https://mdxjs.com/packages/mdx/#compilefile-options
+    mdxOptions: {
+      remarkPlugins: [],
+      rehypePlugins: [rehypeHighlight],
+      format: 'mdx'
+    },
+    // Indicates whether or not to parse the frontmatter from the mdx source
+    parseFrontmatter: false,
+  }
+)
+```
+
+## How to apply CSS syntax themes to rehype-highlight
+
+Independent on the way you use `rehype-highlight`, the plugin will apply a class to every element processed. By default they follow the format `hljs-`. CSS syntax themes compatible with `rehype-highlight` will target these classes and apply the corresponding CSS. An example of a stylesheet like this is [atom-one-dark](https://github.com/highlightjs/highlight.js/blob/main/src/styles/atom-one-dark.css). Here are the first few lines as an example:
+
+```css
+.hljs {
+  color: #abb2bf;
+  background: #282c34;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #5c6370;
+  font-style: italic;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+  color: #c678dd;
+}
+```
+
+## The problem when attempting to use light and dark themes on your page
+
+Loading a stylesheet such as this one works as expected and applies the styles only where it is supposed to. It is compatible with Chakra UI, TailwindCSS or other CSS frameworks and libaries. But what happens if you want to have a different syntax stylesheet depending on if the user selects a light or dark theme? `rehype-highlight` does not natively implement such functionality.
+
+One potential solution would be to load a different stylesheet using JavaScript, based on the current color theme applied. This solution is not very elegant, forces a stylesheet reload every time the user changes the color theme and is problematic to implement in Next.js: stylesheets should be loaded from `_app` (if loading a local CSS file) or `_document` (if using `<link>`) and these files should not contain this type of logic (Chakra's useColorModeValue hook cannot be executed from these files, for example).
+
+## The solution
+
+My solution is to load both stylesheets and modify the selectors so that each stylesheet only targets elements that have a parent with a specific class (for example, `.light` and `.dark`. Then this class is set programatically based on the current color theme.
+
+### First, transform the CSS. Using the previous CSS as an example:
+
+```css
+.dark .hljs {
+  color: #abb2bf;
+  background: #282c34;
+}
+
+.dark .hljs-comment,
+.dark .hljs-quote {
+  color: #5c6370;
+  font-style: italic;
+}
+
+.dark .hljs-doctag,
+.dark .hljs-keyword,
+.dark .hljs-formula {
+  color: #c678dd;
+}
+```
+
+You can also use SCSS, which will singnificantly simplify selectors.
+
+### Lastly, create a parent component and programatically set its class based on the current color theme.
+
+In the following example, I am using ChakraUI, which provides the hook useColorModeValue to return a different value depending on the selected color theme. Using said value I can then add a class programatically:
+
+```jsx
+const PostPage = () => {
+    const codeStyleClass = useColorModeValue('light', 'dark')
+    return (
+        <Box className={codeStyleClass}>
+            <Post />
+        </Box>
+    )
+// Box is a Chakra component that renders a `<div>`, and Post is a custom cumponent that includes the markdown processor output
+```
+
+## Summary
+
+By including a parent component that sets its class programatically based on the current color theme and by modifying the syntax stylesheet to target only components that have a parent with that class, we can implement a light and dark theme that applies to syntax highlighting using `rehype-highlight`.

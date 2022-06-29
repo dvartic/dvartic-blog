@@ -1,8 +1,22 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import { ChakraProvider } from '@chakra-ui/react';
+import type { AppProps } from 'next/app';
+import Layout from '../components/layout';
+import theme from '../src/theme/theme';
 
+// Imports custom CSS stylesheets for later use with rehype-highlight(code highlighting for code blocks)
+import '../styles/atom-one-dark.css';
+import '../styles/atom-one-light.css';
+
+// Implements Next Layout and sets ChakraUI with a modified theme.
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <ChakraProvider theme={theme}>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </ChakraProvider>
+
+  )
 }
 
 export default MyApp
