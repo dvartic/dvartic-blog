@@ -1,4 +1,7 @@
-# Personal Page/Blog created using React and Next.js SSG
+# Personal Page/Blog using React and Next (SSG)
+
+[https://www.dvartic.xyz/](https://www.dvartic.xyz/)
+
 This website is a simple personal page that includes a landing page and a blog. Blog posts are stored in Markdown files, which are processed at build time to generate JavaScript/HTML.
 
 ## Who am I?
