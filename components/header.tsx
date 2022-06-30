@@ -1,6 +1,7 @@
-import { Flex, Heading, HStack, Link, Text, IconButton, Box, Hide, Menu, MenuList, MenuButton, MenuItem, useColorMode, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Heading, HStack, Link, Text, IconButton, Box, Hide, Menu, MenuList, MenuButton, MenuItem, useColorMode, useColorModeValue, useMediaQuery } from "@chakra-ui/react";
 import { MoonIcon, HamburgerIcon, SunIcon } from '@chakra-ui/icons';
 import NextLink from "next/link";
+import { useMemo } from "react";
 import { Codesquare01 } from "./custom-icons/codesquare01";
 import { Github } from "./custom-icons/github";
 import { useRouter } from 'next/router';
@@ -18,19 +19,24 @@ export function Header({ propWidth, propMaxWidth }: Props) {
     const bg = useColorModeValue('gray.100', 'black');
     const svgColor = useColorModeValue('black', 'white');
     const svgBg = useColorModeValue('gray.300', 'gray.700');
-    const activeColorLink = useColorModeValue('gray.600', 'gray.400');
+    const activeRouteColorLink = useColorModeValue('gray.600', 'gray.400');
+    const activeColorLink = useColorModeValue('blue.700', 'blue.100');
+
+    // Detects wether the device supports hover or not through a media query, and executes a simple logic with memoized value to assign a different text-decoration property.
+    const [isHoverNotSupported] = useMediaQuery('(hover: none)');
+    const hover = useMemo(() => isHoverNotSupported ? {textDecoration: 'none'} : {textDecoration: 'underline'}, [isHoverNotSupported]);
 
     // Detects whether the current route is `/blog` (active) and stores a different value in the linkColor variable, which is then used to change the 'Blog' Link color
     const router = useRouter();
     const isBlogActive = router.pathname.includes('/blog');
-    const linkColor = isBlogActive ? activeColorLink : 'inherit';
+    const linkColor = isBlogActive ? activeRouteColorLink : 'inherit';
 
     return (
         <header>
             <Box backgroundColor={bg}>
                 <Flex justifyContent='space-between' w={propWidth} maxWidth={propMaxWidth} ml='auto' mr='auto' h={16} alignItems='center'>
                     <NextLink href={'/'} passHref>
-                        <Link>
+                        <Link _hover={hover} _active={{color: activeColorLink}}>
                             <HStack spacing={3}>
                                 <Box paddingBottom={1.5}>
                                     <Codesquare01 svgColor={svgColor} />
@@ -42,9 +48,9 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                     <Hide below='sm'>
                         <Flex justifyContent='space-between' alignItems='center' w={['50%']} fontSize={['lg', 'lg', 'xl']} fontWeight='bold'>
                             <NextLink href={'/blog'} passHref>
-                                <Link display='flex' alignItems='center' color={linkColor}>Blog</Link>
+                                <Link display='flex' alignItems='center' color={linkColor} _hover={hover} _active={{color: activeColorLink}}>Blog</Link>
                             </NextLink>
-                            <Link display='flex' alignItems='center' alignContent='center' href='https://github.com/dvartic' isExternal>
+                            <Link display='flex' alignItems='center' alignContent='center' href='https://github.com/dvartic' isExternal _hover={hover} _active={{color: activeColorLink}}>
                                 <HStack>
                                     <Box paddingBottom={1.5}>
                                         <Github svgColor={svgColor} />
