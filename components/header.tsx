@@ -24,7 +24,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
 
     // Detects wether the device supports hover or not through a media query, and executes a simple logic with memoized value to assign a different text-decoration property.
     const [isHoverNotSupported] = useMediaQuery('(hover: none)');
-    const hover = useMemo(() => isHoverNotSupported ? {textDecoration: 'none'} : {textDecoration: 'underline'}, [isHoverNotSupported]);
+    const hover = useMemo(() => isHoverNotSupported ? { textDecoration: 'none' } : { textDecoration: 'underline' }, [isHoverNotSupported]);
 
     // Detects whether the current route is `/blog` (active) and stores a different value in the linkColor variable, which is then used to change the 'Blog' Link color
     const router = useRouter();
@@ -36,7 +36,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
             <Box backgroundColor={bg}>
                 <Flex justifyContent='space-between' w={propWidth} maxWidth={propMaxWidth} ml='auto' mr='auto' h={16} alignItems='center'>
                     <NextLink href={'/'} passHref>
-                        <Link _hover={hover} _active={{color: activeColorLink}}>
+                        <Link _hover={hover} _active={{ color: activeColorLink }}>
                             <HStack spacing={3}>
                                 <Box paddingBottom={1.5}>
                                     <Codesquare01 svgColor={svgColor} />
@@ -45,33 +45,31 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                             </HStack>
                         </Link>
                     </NextLink>
-                    <Hide below='sm'>
-                        <Flex justifyContent='space-between' alignItems='center' w={['50%']} fontSize={['lg', 'lg', 'xl']} fontWeight='bold'>
-                            <NextLink href={'/blog'} passHref>
-                                <Link display='flex' alignItems='center' color={linkColor} _hover={hover} _active={{color: activeColorLink}}>Blog</Link>
-                            </NextLink>
-                            <Link display='flex' alignItems='center' alignContent='center' href='https://github.com/dvartic' isExternal _hover={hover} _active={{color: activeColorLink}}>
-                                <HStack>
-                                    <Box paddingBottom={1.5}>
-                                        <Github svgColor={svgColor} />
-                                    </Box>
-                                    <Text>GitHub</Text>
-                                </HStack>
-                            </Link>
-                            <Box paddingBottom={1.5}>
-                                <IconButton
-                                    aria-label='Change Color Theme'
-                                    backgroundColor={svgBg}
-                                    icon={
-                                        colorMode === 'light' ? <MoonIcon /> : <SunIcon />
-                                    }
-                                    onClick={toggleColorMode}
-                                />
-                            </Box>
-                        </Flex>
-                    </Hide>
-                    <Hide above='sm'>
-                        <HStack fontSize={['lg', 'lg', 'xl']}>
+                    <Flex justifyContent='space-between' alignItems='center' w={['50%']} fontSize={['lg', 'lg', 'xl']} fontWeight='bold' display={{ base: 'none', sm: 'none', md: 'flex', lg: 'flex', xl: 'flex', '2xl': 'flex' }} >
+                        <NextLink href={'/blog'} passHref>
+                            <Link display='flex' alignItems='center' color={linkColor} _hover={hover} _active={{ color: activeColorLink }}>Blog</Link>
+                        </NextLink>
+                        <Link display='flex' alignItems='center' alignContent='center' href='https://github.com/dvartic' isExternal _hover={hover} _active={{ color: activeColorLink }}>
+                            <HStack>
+                                <Box paddingBottom={1.5}>
+                                    <Github svgColor={svgColor} />
+                                </Box>
+                                <Text>GitHub</Text>
+                            </HStack>
+                        </Link>
+                        <Box paddingBottom={1.5}>
+                            <IconButton
+                                aria-label='Change Color Theme'
+                                backgroundColor={svgBg}
+                                icon={
+                                    colorMode === 'light' ? <MoonIcon /> : <SunIcon />
+                                }
+                                onClick={toggleColorMode}
+                            />
+                        </Box>
+                    </Flex>
+                    <Box display={{ base: 'block', sm: 'block', md: 'none', lg: 'none', xl: 'none', '2xl': 'none' }} >
+                        <HStack fontSize={['lg', 'lg', 'xl']} >
                             <Box paddingBottom={1.5}>
                                 <IconButton aria-label='Change Color Theme' icon={<MoonIcon />} onClick={toggleColorMode} />
                             </Box>
@@ -85,7 +83,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                                 </MenuList>
                             </Menu>
                         </HStack>
-                    </Hide>
+                    </Box>
                 </Flex>
             </Box>
         </header>
