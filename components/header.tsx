@@ -71,7 +71,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                     <Box display={{ base: 'block', sm: 'block', md: 'none', lg: 'none', xl: 'none', '2xl': 'none' }} >
                         <HStack fontSize={['lg', 'lg', 'xl']} >
                             <Box paddingBottom={1.5}>
-                                <IconButton aria-label='Change Color Theme' icon={<MoonIcon />} onClick={toggleColorMode} />
+                                <IconButton aria-label='Change Color Theme' icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />} onClick={toggleColorMode} />
                             </Box>
                             <Menu>
                                 <MenuButton position='relative' bottom={1} as={IconButton} aria-label='Options' icon={<HamburgerIcon />} variant='outline' />

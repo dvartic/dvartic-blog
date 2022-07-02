@@ -15,8 +15,9 @@ I am a front-end web developer currently working on React-based projects. I am s
 * [next-mdx-remote](https://github.com/hashicorp/next-mdx-remote): efficiently loads MarkdownX content through getStaticProps in Next.js.
 * [MarkdownX](https://mdxjs.com/): allows injecting of JSX in Markdown files.
 * [rehype-highlight](https://github.com/rehypejs/rehype-highlight) with custom [highlight.js](https://highlightjs.org/) stylesheet with support for light/dark theme.
+* Figma for prototyping. [Link to Figma design](https://www.figma.com/file/yTGlbKbr7hKT3CpVdJTBtc/dvartic-blog)
 
-## Why I made this website?
+## Why did I make this website?
 I was inspired by blogs made by other developers and how useful they were in my journey. I too wanted to share my knowledge with others.
 
 ## What are some of the features of this site?
@@ -25,14 +26,14 @@ I was inspired by blogs made by other developers and how useful they were in my 
 * Full responsive design.
 * MarkdownX support.
 * Search/Filter function for posts, that appropiately waits until the user stops writing to start searching.
-* Post ordered by date (located in post metadata). Latest post section that shows the 6 latest posts.
+* Posts ordered by date (located in post metadata). Latest post section that shows the 6 latest posts.
 * Syntax highlighting for code blocks, with custom stylesheet for dark/light mode.
-* Use of React `useMemo()` and `useEffect()` where appropiate to avoid executing code on every re-render when not necessary.
+* Use of React `useMemo()` and `useEffect()` where appropiate to avoid executing code on every re-render if not necessary.
 
 ## How is the project's folder structure organized?
 The project follows Next.js guidelines and is structured as follows:
-* `/pages` folder holds the main pages of the site. `/pages/blog` holds the blog index and each blog post. Next.js routes automatically based on the folder structure inside the `/pages` folder.
-* `/components` folder holds reusable React components, both components that are imported directly to `/pages` and components imported by other components. The folder `/components/custom-icons` holds various SVG files that are used throughout the page. Some of these SVGs are configured programatically.
+* `/pages` folder holds the main pages of the site. `/pages/blog` holds the blog index and each blog post. Next.js creates routes automatically based on the folder structure inside the `/pages` folder.
+* `/components` folder holds reusable React components, both components that are imported directly to `/pages` and components imported by other components. The folder `/components/custom-icons` holds various SVG files that are used throughout the site. Some of these SVGs are configured programatically.
 * `/public` folder holds static assets (images). In Next.js static assets should be placed in this folder.
 * `/src/theme` holds ChakraUI Theme configuration.
 * `/styles` holds a dark and light modifyed CSS stylesheet from `highlight.js` for use with `rehype-highlight`
