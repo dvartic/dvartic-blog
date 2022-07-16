@@ -1,18 +1,17 @@
-import { Box, Flex, Text, VStack, useColorModeValue, Link } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { Box, Flex, Text, VStack, useColorModeValue, Link, useConst } from "@chakra-ui/react";
 import NextImage from 'next/image';
 import NextLink from "next/link";
 import {getFormatDate} from '../lib/date';
 
 interface Props {
     post: {
-        title: string,
-        subtitle: string,
-        date: string,
-        tag: Array<string>,
-        slug: string,
-        image: string
-    }
+        title: string;
+        subtitle: string;
+        date: string;
+        tag: Array<string>;
+        slug: string;
+        image: string;
+    };
 }
 
 export function PostPreview({ post }: Props) {
@@ -23,7 +22,7 @@ export function PostPreview({ post }: Props) {
     const borderCont = useColorModeValue('gray.100', 'black');
 
     // Uses the helper function getFormatDate to format the date into a more readable form. useMeme ensures the function is executed only when needed (the post changes).
-    const formattedDate = useMemo(() => getFormatDate(post.date), [post]);
+    const formattedDate = useConst(() => getFormatDate(post.date));
 
     return (
 

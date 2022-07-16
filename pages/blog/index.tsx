@@ -14,26 +14,17 @@ export const getStaticProps: GetStaticProps = async () => {
 }
 
 interface Props {
-  posts: [
-    {
-      title: string,
-      subtitle: string,
-      date: string,
-      tag: Array<string>,
-      slug: string,
-      image: string
-    }
-  ]
+  posts: Posts;
 }
 
 type Posts = {
-  title: string,
-  subtitle: string,
-  date: string,
-  tag: Array<string>,
-  slug: string,
-  image: string
-}[]
+  title: string;
+  subtitle: string;
+  date: string;
+  tag: Array<string>;
+  slug: string;
+  image: string;
+}[];
 
 const Blog: NextPage<Props> = ({ posts }) => {
   const [searchStr, setSearchStr] = useState('')

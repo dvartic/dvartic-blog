@@ -1,28 +1,27 @@
-import { Box, Flex, Text, VStack, useColorModeValue, Heading, Spacer } from "@chakra-ui/react";
+import { Box, Flex, Text, VStack, useColorModeValue, Heading, Spacer, useConst } from "@chakra-ui/react";
 import NextImage from 'next/image';
 import { MDXRemote } from 'next-mdx-remote';
-import { useMemo } from "react";
 import MDXComponents from '../components/MDXComponents';
 import {getFormatDate} from '../lib/date';
 
 interface Props {
-    propWidth: string,
-    propMaxWidth: string,
-    propMt: number,
-    propMb: number,
+    propWidth: string;
+    propMaxWidth: string;
+    propMt: number;
+    propMb: number;
     frontmatter: {
-        title: string,
-        subtitle: string,
-        date: string,
-        tag: Array<string>,
-        slug: string,
-        image: string
-    }
+        title: string;
+        subtitle: string;
+        date: string;
+        tag: Array<string>;
+        slug: string;
+        image: string;
+    };
     src: {
-        compiledSource: string,
-        frontmatter: {},
-        scope: {}
-    }
+        compiledSource: string;
+        frontmatter: {};
+        scope: {};
+    };
 }
 
 export function Post({ propWidth, propMaxWidth, propMt, propMb, frontmatter, src }: Props) {
@@ -32,8 +31,8 @@ export function Post({ propWidth, propMaxWidth, propMt, propMb, frontmatter, src
     const bgInsCont = useColorModeValue('gray.100', 'gray.500')
     const borderCont = useColorModeValue('gray.100', 'black')
 
-    // Uses the helper function getFormatDate to format the date into a more readable form. useMeme ensures the function is executed only when needed (the post changes).
-    const formattedDate = useMemo(() => getFormatDate(frontmatter.date), [frontmatter]);
+    // Uses the helper function getFormatDate to format the date into a more readable form. useMemo ensures the function is executed only when needed (the post changes).
+    const formattedDate = useConst(() => getFormatDate(frontmatter.date));
 
     return (
         <Box w={propWidth} maxWidth={propMaxWidth} mt={propMt} mb={propMb} ml='auto' mr='auto' backgroundColor={bgOuterCont} border='1px' borderColor={borderCont} borderRadius='xl'>

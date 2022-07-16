@@ -2,10 +2,10 @@ import { Heading, VStack, Text, Box } from "@chakra-ui/react";
 import NextImage from 'next/image';
 
 interface Props {
-    propWidth: string,
-    propMaxWidth: string,
-    propMt: number,
-    propMb: number
+    propWidth: string;
+    propMaxWidth: string;
+    propMt: number;
+    propMb: number;
 }
 
 export function About({ propWidth, propMaxWidth, propMt, propMb }: Props) {

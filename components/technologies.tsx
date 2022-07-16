@@ -11,10 +11,10 @@ import { TsLogo } from "./custom-icons/ts-logo";
 import { GnuLinux } from "./custom-icons/gnulinux-logo";
 
 interface Props {
-    propWidth: string,
-    propMaxWidth: string,
-    propMt: number,
-    propMb: number
+    propWidth: string;
+    propMaxWidth: string;
+    propMt: number;
+    propMb: number;
 }
 
 export function Technologies({propWidth, propMaxWidth, propMt, propMb}: Props) {

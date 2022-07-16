@@ -1,8 +1,8 @@
 import { Text, Box } from "@chakra-ui/react";
 
 interface Props {
-    propMt: number,
-    propMb: number
+    propMt: number;
+    propMb: number;
 }
 
 export function Footer({propMt, propMb}: Props) {

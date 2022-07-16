@@ -2,12 +2,12 @@ import { Box, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
 
 interface Props {
-    propWidth: string,
-    propMaxWidth: string,
-    propMt: number,
-    propMb: number,
-    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-    searchStr: string
+    propWidth: string;
+    propMaxWidth: string;
+    propMt: number;
+    propMb: number;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    searchStr: string;
 }
 
 export function Search({ propWidth, propMaxWidth, propMt, propMb, handleChange, searchStr }: Props) {

@@ -29,13 +29,13 @@ export const getFileBySlug = async (slug: string) => {
     }
 };
 
-type Posts = {
-    title: string,
-    subtitle: string,
-    date: string,
-    tag: Array<string>,
-    slug: string,
-    image: string
+interface Post {
+    title: string;
+    subtitle: string;
+    date: string;
+    tag: Array<string>;
+    slug: string;
+    image: string;
 }
 
 // Returns an array containing all metadata from every post, ordered by date metadata
@@ -48,8 +48,8 @@ export const getAllFilesMetadata = () => {
     })
 
     const orderedData = unOrderedData.sort((a, b) => {
-        const a2 = a as Posts;
-        const b2 = b as Posts;
+        const a2 = a as Post;
+        const b2 = b as Post;
         const aDate = new Date(a2.date);
         const bDate = new Date(b2.date);
         if (aDate > bDate) {

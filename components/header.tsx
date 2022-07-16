@@ -7,8 +7,8 @@ import { Github } from "./custom-icons/github";
 import { useRouter } from 'next/router';
 
 interface Props {
-    propWidth: string,
-    propMaxWidth: string
+    propWidth: string;
+    propMaxWidth: string;
 }
 
 export function Header({ propWidth, propMaxWidth }: Props) {
