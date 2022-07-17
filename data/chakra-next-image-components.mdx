@@ -1,0 +1,59 @@
+---
+title: 'Use Next.js Image Components with ChakraUI'
+subtitle: 'How to integrate both'
+date: '2022-07-17'
+tag: ['Next', 'Chakra']
+image: '/images/post-images/chakra-nextjs.png'
+---
+
+## What is next/image from Next.js and how does it fit with ChakraUI
+Next.js provides an image component that you can import from `next/image` to provide various optimizations including:
+* **Improved Performance**: serve the correct image size for each device, using modern image formats.
+* **Visual Stability**: automatically prevents Cumulative Layout Shift [Cumulative Layout Shift](https://nextjs.org/learn/seo/web-performance/cls).
+* **Faster Page Loads**: images are only loaded when they enter the viewport, with optional blur-up placeholders.
+* **Asset Flexibility**: on-demand image resizing, even for images stored on remote servers.
+* Features such as **loading control** (lazy or eager loading), **callback execution on loading** and [more](https://nextjs.org/docs/api-reference/next/image).
+
+Due to these features, it is desirable to use next/image components. However, if you use a design system such as ChakraUI, you may wonder how you can use both technologies at the same time and achieve good results.
+
+## The problem
+You want to use ChakraUI responsive syntax while implementing next/image components for optimization. However, they are incompatible to each other since ChakraUI Image and next/image components both render an `<img>` element and Next.js has very specific requirements and configuration.
+
+## The solution
+There is a [GitHub thread](https://github.com/chakra-ui/chakra-ui/discussions/2475) discussing ways to integrate both technologies. Various solutions are proposed, mainly those using ChakraUI `factory` functions. However, these are complicated and they all result in having to still use next/image components with correct props and configuration.
+
+My recommended solution is to simply use a Chakra Box component (or other Chakra components such as Flex) as a parent of a next/image component (solution also proposed by GitHub user [https://github.com/marctuscher](https://github.com/marctuscher)). This solution is quite straightforward and can be used to accomplish any configuration.
+
+* **Chakra Box** components can be configured using Chakra's syntax to position and size appropriately.
+* **next/image** components provide [layout configuration](https://nextjs.org/docs/api-reference/next/image#layout) to set its behaviour in relation to their parent. Additionally, it provides a property to pass CSS.
+
+### Example with fixed width and height.
+This is the most basic example. You can use Box for positioning. The exact size in pixels is set directly in the next/image component. Our image will be rendered in the indicated size, since we are using the default next/image `intrinsic` layout. In addition, we can pass CSS to the component using the `style` prop. In this example, we set the `borderRadius` CSS property.
+
+```JavaScript
+import { Box } from "@chakra-ui/react";
+import NextImage from 'next/image';
+
+export function Image {
+    <Box position='relative' bottom={1}>
+	    <NextImage src='/image.png' alt='My Picture' width={100} height={100} style={{ borderRadius: '100%' }} />
+    </Box>
+}
+```
+
+### Example using responsive sizing.
+In this example, we configure next/image to grow its size to fit its parent component using the `layout` prop. In next/image, `width` and `height` refer to the original size of the image and not the rendered size. We can set the Chakra Box to have any size we want, including responsive sizes such as percentages. In this configuration, both size and position is being determined by the Chakra component.
+```JavaScript
+import { Box } from "@chakra-ui/react";
+import NextImage from 'next/image';
+
+export function Image {
+    <Box width='100%' heigh='100%' position='relative' bottom={1}>
+	    <NextImage layout='responsive' src='/image.png' alt='My Picture' width={100} height={100} style={{ borderRadius: '100%' }} />
+    </Box>
+}
+```
+Other responsive setups can be done, such as using `layout='fixed'` and setting `objectFit='cover'` to get a `cover` effect, or setting different sizes on the Box component based on breakpoints.
+
+## Summary
+We can use a Chakra parent component such as Box to set the size and position of a next/image component. We use Chakra responsive syntax while getting next/image optimizations. To achieve this, we need to use next/image `layout` prop and set the size and position of the parent Chakra component appropriately. I believe that this is the simplest and most effective solution, since others still require to configure next/image manually.
