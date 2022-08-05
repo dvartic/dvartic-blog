@@ -2,7 +2,7 @@ import { Box, Flex, Text, VStack, useColorModeValue, Heading, Spacer, useConst }
 import NextImage from 'next/image';
 import { MDXRemote } from 'next-mdx-remote';
 import MDXComponents from '../components/MDXComponents';
-import {getFormatDate} from '../lib/date';
+import { getFormatDate } from '../lib/date';
 
 interface Props {
     propWidth: string;
@@ -25,7 +25,7 @@ interface Props {
 }
 
 export function Post({ propWidth, propMaxWidth, propMt, propMb, frontmatter, src }: Props) {
-    
+
     // Sets different color variables depending on if the page is in dark or light mode. These variables are then used to set color in components.
     const bgOuterCont = useColorModeValue('white', 'gray.700')
     const bgInsCont = useColorModeValue('gray.100', 'gray.500')
@@ -35,28 +35,30 @@ export function Post({ propWidth, propMaxWidth, propMt, propMb, frontmatter, src
     const formattedDate = useConst(() => getFormatDate(frontmatter.date));
 
     return (
-        <Box w={propWidth} maxWidth={propMaxWidth} mt={propMt} mb={propMb} ml='auto' mr='auto' backgroundColor={bgOuterCont} border='1px' borderColor={borderCont} borderRadius='xl'>
-            <Box h='sm' backgroundColor={bgInsCont} display='flex' justifyContent='center' alignItems='center' borderTop='1px' borderColor={borderCont} borderTopRadius='xl'>
-                <Box boxSize={'85%'} position='relative'>
-                    <NextImage src={frontmatter.image} alt='Post Image' layout='fill' objectFit="contain" />
+        <article>
+            <Box w={propWidth} maxWidth={propMaxWidth} mt={propMt} mb={propMb} ml='auto' mr='auto' backgroundColor={bgOuterCont} border='1px' borderColor={borderCont} borderRadius='xl'>
+                <Box h='sm' backgroundColor={bgInsCont} display='flex' justifyContent='center' alignItems='center' borderTop='1px' borderColor={borderCont} borderTopRadius='xl'>
+                    <Box boxSize={'85%'} position='relative'>
+                        <NextImage src={frontmatter.image} alt='Post Image' layout='fill' objectFit="contain" />
+                    </Box>
+                </Box>
+                <Box display='flex' justifyContent='center' alignItems='center' pt={5} pb={5} maxWidth='900px' mr='auto' ml='auto'>
+                    <VStack w='85%' spacing='8'>
+                        <Flex justifyContent='space-between' w='100%'>
+                            <Text>{frontmatter.tag.join(', ')}</Text>
+                            <Text>{formattedDate}</Text>
+                        </Flex>
+                        <Box w='100%'>
+                            <Heading textAlign='center' as={'h1'}>{frontmatter.title}</Heading>
+                            <Spacer h='2' />
+                            <Text textAlign='center'>{frontmatter.subtitle}</Text>
+                        </Box>
+                        <Box w='100%'>
+                            <MDXRemote {...src} components={MDXComponents} />
+                        </Box>
+                    </VStack>
                 </Box>
             </Box>
-            <Box display='flex' justifyContent='center' alignItems='center' pt={5} pb={5} maxWidth='900px' mr='auto' ml='auto'>
-                <VStack w='85%' spacing='8'>
-                    <Flex justifyContent='space-between' w='100%'>
-                        <Text>{frontmatter.tag.join(', ')}</Text>
-                        <Text>{formattedDate}</Text>
-                    </Flex>
-                    <Box w='100%'>
-                        <Heading textAlign='center'>{frontmatter.title}</Heading>
-                        <Spacer h='2' />
-                        <Text textAlign='center'>{frontmatter.subtitle}</Text>
-                    </Box>
-                    <Box w='100%'>
-                        <MDXRemote {...src} components={MDXComponents} />
-                    </Box>
-                </VStack>
-            </Box>
-        </Box>
+        </article>
     )
 }
