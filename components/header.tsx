@@ -1,4 +1,4 @@
-import { Flex, Heading, HStack, Link, Text, IconButton, Box, Hide, Menu, MenuList, MenuButton, MenuItem, useColorMode, useColorModeValue, useMediaQuery } from "@chakra-ui/react";
+import { Flex, Heading, HStack, Link, Text, IconButton, Box, Menu, MenuList, MenuButton, MenuItem, useColorMode, useColorModeValue, useMediaQuery } from "@chakra-ui/react";
 import { MoonIcon, HamburgerIcon, SunIcon } from '@chakra-ui/icons';
 import NextLink from "next/link";
 import { useMemo } from "react";

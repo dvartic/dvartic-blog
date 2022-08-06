@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://dvartic.xyz
+
+# Sitemaps
+Sitemap: https://dvartic.xyz/sitemap.xml
