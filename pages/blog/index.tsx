@@ -61,6 +61,9 @@ const Blog: NextPage<Props> = ({ posts }) => {
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="description" content="Welcome to my blog! I am a front-end web developer with specialties in React and Next.js" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta property="og:title" content="Dvartic - Blog" />
+        <meta property="og:description" content="Welcome to my blog! I am a front-end web developer with specialties in React and Next.js" />
+        <meta property="og:image" content="/images/pfp.png" />
       </Head>
       <Search propWidth={'90%'} propMaxWidth={'1200px'} propMt={14} propMb={14} handleChange={handleChange} searchStr={searchStr} />
       <BlogPosts propWidth={'90%'} propMaxWidth={'1200px'} propMt={14} propMb={14} pageSrc={'blog'} posts={filteredPosts} />

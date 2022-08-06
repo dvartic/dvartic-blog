@@ -23,6 +23,9 @@ const Home: NextPage = ({ slicedPosts }: InferGetStaticPropsType<typeof getStati
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="description" content="Hello! I am a front-end web developer with specialties in React and Next.js" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta property="og:title" content="Dvartic - Homepage" />
+        <meta property="og:description" content="Hello! I am a front-end web developer with specialties in React and Next.js" />
+        <meta property="og:image" content="/images/pfp.png" />
       </Head>
       <About propWidth={'90%'} propMaxWidth={'420px'} propMt={14} propMb={14} />
       <Technologies propWidth={'90%'} propMaxWidth={'750px'} propMt={14} propMb={14} />

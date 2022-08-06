@@ -44,6 +44,9 @@ const PostPage: NextPage = ({ src, frontmatter }: InferGetStaticPropsType<typeof
                 <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
                 <meta name="description" content={frontmatter.subtitle} />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta property="og:title" content={frontmatter.title} />
+                <meta property="og:description" content={frontmatter.subtitle} />
+                <meta property="og:image" content={frontmatter.image} />
             </Head>
             <Box className={codeStyleClass}>
                 <Post propWidth={'90%'} propMaxWidth={'1200px'} propMt={14} propMb={14} src={src} frontmatter={frontmatter} />
