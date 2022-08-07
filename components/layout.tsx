@@ -10,7 +10,7 @@ export default function Layout({ children }: LayoutProps) {
     return (
         <>
             <Header propWidth={'90%'} propMaxWidth={'1200px'} />
-            <main>{children}</main>
+                {children}
             <Footer propMt={14} propMb={14} />
         </>
     )

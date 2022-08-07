@@ -21,7 +21,7 @@ interface Props {
 export function BlogPosts({ propWidth, propMaxWidth, propMt, propMb, pageSrc, posts }: Props) {
 
     // Gets a different Heading for the component based on which page is rendering the component. useMemo ensures the heading is only recalculated if the page source changes.
-    const heading = useConst(() => pageSrc === 'index' ? <Heading as='h1' size='2xl' textAlign='center'>Latest <NextLink href='/blog' passHref><Link color='blue.600'>Blog</Link></NextLink> Posts</Heading> : <Heading as='h1' size='2xl' textAlign='center'>Posts</Heading>)
+    const heading = useConst(() => pageSrc === 'index' ? <Heading as='h1' size='2xl' textAlign='center'>Latest <NextLink href='/blog' passHref scroll={false}><Link color='blue.600'>Blog</Link></NextLink> Posts</Heading> : <Heading as='h1' size='2xl' textAlign='center'>Posts</Heading>)
 
     return (
         <VStack w={propWidth} maxWidth={propMaxWidth} mt={propMt} mb={propMb} ml='auto' mr='auto' spacing='5'>

@@ -27,7 +27,7 @@ export function PostPreview({ post }: Props) {
     return (
 
         <Box w='xs' h='sm' backgroundColor={bgOuterCont} border='1px' borderColor={borderCont} borderRadius='xl' margin={4}>
-            <NextLink href={`/blog/${post.slug}`} passHref>
+            <NextLink href={`/blog/${post.slug}`} passHref scroll={false}>
                 <Link variant={'post-preview'}>
                     <Box h='50%' backgroundColor={bgInsCont} display='flex' justifyContent='center' alignItems='center' borderTop='1px' borderColor={borderCont} borderTopRadius='xl'>
                         <Box boxSize={'85%'} position='relative'>

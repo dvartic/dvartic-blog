@@ -35,7 +35,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
         <header>
             <Box backgroundColor={bg}>
                 <Flex justifyContent='space-between' w={propWidth} maxWidth={propMaxWidth} ml='auto' mr='auto' h={16} alignItems='center'>
-                    <NextLink href={'/'} passHref>
+                    <NextLink href={'/'} passHref scroll={false}>
                         <Link _hover={hover} _active={{ color: activeColorLink }}>
                             <HStack spacing={3}>
                                 <Box paddingBottom={1.5}>
@@ -46,7 +46,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                         </Link>
                     </NextLink>
                     <Flex justifyContent='space-between' alignItems='center' w={['50%']} fontSize={['lg', 'lg', 'xl']} fontWeight='bold' display={{ base: 'none', sm: 'none', md: 'flex', lg: 'flex', xl: 'flex', '2xl': 'flex' }} >
-                        <NextLink href={'/blog'} passHref>
+                        <NextLink href={'/blog'} passHref scroll={false}>
                             <Link display='flex' alignItems='center' color={linkColor} _hover={hover} _active={{ color: activeColorLink }}>Blog</Link>
                         </NextLink>
                         <Link display='flex' alignItems='center' alignContent='center' href='https://github.com/dvartic' isExternal _hover={hover} _active={{ color: activeColorLink }}>
@@ -76,7 +76,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                             <Menu>
                                 <MenuButton position='relative' bottom={1} as={IconButton} aria-label='Options' icon={<HamburgerIcon />} variant='outline' />
                                 <MenuList>
-                                    <NextLink href={'/blog'} passHref>
+                                    <NextLink href={'/blog'} passHref scroll={false}>
                                         <MenuItem as='a'>Blog</MenuItem>
                                     </NextLink>
                                     <MenuItem icon={<Github svgColor={svgColor} />} as='a' href="https://github.com/dvartic" target='_blank'>GitHub</MenuItem>
