@@ -39,7 +39,7 @@ const PostPage: NextPage = ({ src, frontmatter }: InferGetStaticPropsType<typeof
 
     // Sets a variable based on the color mode being used, with the objective to also apply a different color theme for code block syntax highlighting
     const codeStyleClass = useColorModeValue('light', 'dark');
-    
+
     // Function to generate Structured Data in JSON-LD for each blog post.
     function addBlogJsonLd() {
         return {
@@ -57,11 +57,11 @@ const PostPage: NextPage = ({ src, frontmatter }: InferGetStaticPropsType<typeof
                 "dateCreated": "${frontmatter.date}",
                 "dateModified": "${frontmatter.date}",
                 "description": "${frontmatter.subtitle}",
-                  "author": {
+                "author": {
                    "@type": "Person",
                    "name": "Dvartic"
                  }
-        `,
+                }`,
         };
     }
 
