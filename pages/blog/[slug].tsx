@@ -36,7 +36,35 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 const PostPage: NextPage = ({ src, frontmatter }: InferGetStaticPropsType<typeof getStaticProps>) => {
-    const codeStyleClass = useColorModeValue('light', 'dark')
+
+    // Sets a variable based on the color mode being used, with the objective to also apply a different color theme for code block syntax highlighting
+    const codeStyleClass = useColorModeValue('light', 'dark');
+    
+    // Function to generate Structured Data in JSON-LD for each blog post.
+    function addBlogJsonLd() {
+        return {
+            __html: `{
+                "@context": "https://schema.org", 
+                "@type": "BlogPosting",
+                "headline": "${frontmatter.title}",
+                "alternativeHeadline": "${frontmatter.subtitle}",
+                "image": "${frontmatter.image}",
+                "editor": "Dvartic", 
+                "genre": "Software Development", 
+                "keywords": "software development programming web library framework ${frontmatter.tag.forEach((element: string) => `${element} `)}", 
+                "url": "http://www.example.com",
+                "datePublished": "${frontmatter.date}",
+                "dateCreated": "${frontmatter.date}",
+                "dateModified": "${frontmatter.date}",
+                "description": "${frontmatter.subtitle}",
+                  "author": {
+                   "@type": "Person",
+                   "name": "Dvartic"
+                 }
+        `,
+        };
+    }
+
     return (
         <>
             <Head>
@@ -47,6 +75,11 @@ const PostPage: NextPage = ({ src, frontmatter }: InferGetStaticPropsType<typeof
                 <meta property="og:title" content={frontmatter.title} />
                 <meta property="og:description" content={frontmatter.subtitle} />
                 <meta property="og:image" content={frontmatter.image} />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={addBlogJsonLd()}
+                    key="product-jsonld"
+                />
             </Head>
             <Box className={codeStyleClass}>
                 <Post propWidth={'90%'} propMaxWidth={'1200px'} propMt={14} propMb={14} src={src} frontmatter={frontmatter} />
