@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://dvartic.xyz
+Host: https://www.dvartic.xyz
 
 # Sitemaps
-Sitemap: https://dvartic.xyz/sitemap.xml
+Sitemap: https://www.dvartic.xyz/sitemap.xml

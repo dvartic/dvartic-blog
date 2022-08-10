@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app';
 import NextNProgress from 'nextjs-progressbar';
 import Layout from '../components/layout';
 import theme from '../src/theme/theme';
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion';
 
 // Imports custom CSS stylesheets for later use with rehype-highlight(code highlighting for code blocks)
 import '../styles/atom-one-dark.css';
