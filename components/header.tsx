@@ -5,10 +5,18 @@ import { useMemo } from "react";
 import { Codesquare01 } from "./custom-icons/codesquare01";
 import { Github } from "./custom-icons/github";
 import { useRouter } from 'next/router';
+import { motion } from '../node_modules/framer-motion';
 
 interface Props {
     propWidth: string;
     propMaxWidth: string;
+}
+
+// Framer Motion Variants
+const svgVariant = {
+    hover: {
+        rotate: 10
+    }
 }
 
 export function Header({ propWidth, propMaxWidth }: Props) {
@@ -36,12 +44,12 @@ export function Header({ propWidth, propMaxWidth }: Props) {
             <Box backgroundColor={bg}>
                 <Flex justifyContent='space-between' w={propWidth} maxWidth={propMaxWidth} ml='auto' mr='auto' h={16} alignItems='center'>
                     <NextLink href={'/'} passHref scroll={false}>
-                        <Link _hover={hover} _active={{ color: activeColorLink }}>
+                        <Link _hover={hover} _active={{ color: activeColorLink }} as={motion.a} initial="rest" whileHover="hover" animate="rest">
                             <HStack spacing={3}>
-                                <Box paddingBottom={1.5}>
+                                <Box paddingBottom={1.5} as={motion.div} variants={svgVariant}>
                                     <Codesquare01 svgColor={svgColor} />
                                 </Box>
-                                <Heading display='flex' alignItems='center' size='xl'>Dvartic</Heading>
+                                <Heading as='h1' display='flex' alignItems='center' size='xl'>Dvartic</Heading>
                             </HStack>
                         </Link>
                     </NextLink>

@@ -1,9 +1,9 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
-import NextNProgress from 'nextjs-progressbar';
 import Layout from '../components/layout';
 import theme from '../src/theme/theme';
 import { AnimatePresence, motion } from 'framer-motion';
+// Uninstall NextNProgress
 
 // Imports custom CSS stylesheets for later use with rehype-highlight(code highlighting for code blocks)
 import '../styles/atom-one-dark.css';
@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
     hidden: { opacity: 0, x: -200, y: 0 },
     enter: { opacity: 1, x: 0, y: 0 },
     exit: { opacity: 0, x: 0, y: -100 },
-}
+  }
   return (
     <ChakraProvider theme={theme}>
       <AnimatePresence
@@ -29,13 +29,12 @@ function MyApp({ Component, pageProps, router }: AppProps) {
         onExitComplete={() => window.scrollTo(0, 0)}
       >
         <Layout key={url}>
-          <NextNProgress />
           <motion.main
             variants={variants}
             initial="hidden"
             animate="enter"
             exit="exit"
-            transition={{ type: 'linear' }}
+            transition={{ type: 'linear', duration: 0.2 }}
           >
             <Component {...pageProps} />
           </motion.main>
