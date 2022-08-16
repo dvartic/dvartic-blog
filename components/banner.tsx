@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { Heading, VStack, Button, Flex, useColorModeValue } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import NET from 'vanta/dist/vanta.net.min.js';
+import GLOBE from 'vanta/dist/vanta.globe.min.js';
 import * as THREE from 'three';
 
 export function Banner() {
     const [vantaEffect, setVantaEffect]: any = useState(0);
     const vantaRef = useRef(null);
 
-    const vantaBg = useColorModeValue('gray.100', 'gray.700');
+    const vantaBg = useColorModeValue('gray.200', 'gray.700');
 
     useEffect(() => {
         if (!vantaEffect) {
-            setVantaEffect(NET({
+            setVantaEffect(GLOBE({
                 el: vantaRef.current,
                 THREE: THREE,
                 mouseControls: true,
@@ -21,8 +21,9 @@ export function Banner() {
                 minHeight: 5.00,
                 minWidth: 5.00,
                 scale: 1.00,
-                scaleMobile: 1.00,
-                color: 0x3182ce,
+                scaleMobile: 1.50,
+                color: 0xED64A6,
+                color2: 0x4299e1,
                 backgroundAlpha: 0
             }))
         }
