@@ -32,7 +32,7 @@ export function ContactComp() {
     const { hasCopied, onCopy } = useClipboard('agcascallar@gmail.com');
 
     // React Hook Form state management and validation
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormInput>();
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormInput>();
 
     // Demo Mode States and handlers
     const [demoMode, setDemoMode] = useState(false);
@@ -89,6 +89,7 @@ export function ContactComp() {
                         duration: 9000,
                         isClosable: true
                     })
+                    reset(); // Reset form on successful submission
                 }
             }
             catch (error: any) {
@@ -102,6 +103,7 @@ export function ContactComp() {
                 })
             }
         }
+        // Demo Mode Code
         else if (demoMode) {
             try {
                 await new Promise(res => setTimeout(res, 2000)); // Simulate API wait time
@@ -117,6 +119,7 @@ export function ContactComp() {
                         duration: 9000,
                         isClosable: true
                     })
+                    reset(); // Reset form on successful submission
                 }
             }
             catch (error: any) {
@@ -164,7 +167,7 @@ export function ContactComp() {
                                 <PopoverContent>
                                     <PopoverArrow />
                                     <PopoverCloseButton />
-                                    <PopoverHeader fontWeight='bold' m='auto'>Enable/Disable Demo Mode</PopoverHeader>
+                                    <PopoverHeader fontWeight='bold' m='auto'>Disable Form Submission</PopoverHeader>
                                     <PopoverBody>
                                         <FormControl display='flex' justifyContent='space-between'>
                                             <FormLabel htmlFor='email-alerts'>
