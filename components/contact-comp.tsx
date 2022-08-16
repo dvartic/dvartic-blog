@@ -39,19 +39,20 @@ export function ContactComp() {
     const [simulateError, setSimulateError] = useState(false);
     const onChangeDemoMode = () => {
         if (!demoMode) {
-            setDemoMode(true)
+            setDemoMode(true);
         }
         else if (demoMode) {
-            setDemoMode(false)
+            setDemoMode(false);
+            setSimulateError(false);
         }
     }
     const onChangeSimulateError = () => {
         if (demoMode) {
             if (!simulateError) {
-                setSimulateError(true)
+                setSimulateError(true);
             }
             else if (simulateError) {
-                setSimulateError(false)
+                setSimulateError(false);
             }
         }
     }
@@ -175,7 +176,7 @@ export function ContactComp() {
                                             <FormLabel htmlFor='email-alerts'>
                                                 Simulate Submission Error
                                             </FormLabel>
-                                            <Switch id='email-alerts' colorScheme='pink' isDisabled={!demoMode} onChange={onChangeSimulateError} />
+                                            <Switch id='email-alerts' colorScheme='pink' isDisabled={!demoMode} isChecked={simulateError} onChange={onChangeSimulateError} />
                                         </FormControl>
                                     </PopoverBody>
                                 </PopoverContent>
