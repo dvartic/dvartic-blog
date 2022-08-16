@@ -17,14 +17,17 @@ interface Props {
     propMb: number;
 }
 
-export function Technologies({propWidth, propMaxWidth, propMt, propMb}: Props) {
+export function Technologies({ propWidth, propMaxWidth, propMt, propMb }: Props) {
 
     // Sets a different color to the variable depending on if the page is in dark or light mode. This variable is then used to set color in some SVGs.
     const svgColor = useColorModeValue('black', 'white');
-    
+
     return (
         <VStack w={propWidth} maxWidth={propMaxWidth} mt={propMt} mb={propMb} ml='auto' mr='auto' spacing='5'>
-            <Heading as='h1' size='2xl' textAlign='center'>Technologies</Heading>
+            <Heading as='h1' size='2xl' textAlign='center'>About & Technologies</Heading>
+            <Text textAlign='center' w={['100%', '70%']}>
+                I am a web developer with specialties in React and Next.js. I like to develop projects that enable great user experiences on the web. Aside from web, I also hold interests in GNU/Linux and PC hardware.
+            </Text>
             <SimpleGrid columns={[3, 4, 5]} spacing={[6, 6, 10]}>
                 <Box>
                     <ReactLogo />

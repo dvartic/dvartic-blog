@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app';
 import Layout from '../components/layout';
 import theme from '../src/theme/theme';
 import { AnimatePresence, motion } from 'framer-motion';
-// Uninstall NextNProgress
 
 // Imports custom CSS stylesheets for later use with rehype-highlight(code highlighting for code blocks)
 import '../styles/atom-one-dark.css';
