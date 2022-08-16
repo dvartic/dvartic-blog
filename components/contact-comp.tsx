@@ -1,7 +1,9 @@
-import { Box, Button, Flex, FormControl, FormLabel, Heading, IconButton, Input, InputGroup, InputLeftElement, Link, Stack, Textarea, Tooltip, useClipboard, useColorModeValue, VStack, Spacer, FormErrorMessage, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, FormControl, FormLabel, Heading, IconButton, Input, InputGroup, InputLeftElement, Link, Stack, Textarea, Tooltip, useClipboard, useColorModeValue, VStack, Spacer, FormErrorMessage, useToast, Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverBody, PopoverArrow, PopoverCloseButton, Switch } from '@chakra-ui/react';
 import { BsGithub, BsPerson } from 'react-icons/bs';
 import { MdEmail, MdOutlineEmail } from 'react-icons/md';
+import { ArrowDownIcon } from '@chakra-ui/icons'
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useState } from 'react';
 
 type FormInput = {
     name: string,
@@ -32,49 +34,100 @@ export function ContactComp() {
     // React Hook Form state management and validation
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormInput>();
 
+    // Demo Mode States and handlers
+    const [demoMode, setDemoMode] = useState(false);
+    const [simulateError, setSimulateError] = useState(false);
+    const onChangeDemoMode = () => {
+        if (!demoMode) {
+            setDemoMode(true)
+        }
+        else if (demoMode) {
+            setDemoMode(false)
+        }
+    }
+    const onChangeSimulateError = () => {
+        if (demoMode) {
+            if (!simulateError) {
+                setSimulateError(true)
+            }
+            else if (simulateError) {
+                setSimulateError(false)
+            }
+        }
+    }
+
     // Chakra Toast component
     const toast = useToast();
 
-    // Function to handle form submission. Submits form through Next.js API Route, and executes Chakra Toast based on promise result.
+    // Function to handle form submission. Submits form through Next.js API Route, and executes Chakra Toast based on promise result. Avoids submission if Demo Mode enabled.
     const onSubmit: SubmitHandler<FormInput> = async (data) => {
-        try {
-            const res = await fetch('/api/sendgrid', {
-                body: JSON.stringify({
-                    email: data.email,
-                    fullname: data.name,
-                    subject: 'You have a new message on dvartic.xyz',
-                    message: data.message
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                method: 'POST'
-            });
-            const resJson = await res.json();
-            if (resJson.error) {
-                throw new Error(resJson.error);
+        if (!demoMode) {
+            try {
+                const res = await fetch('/api/sendgrid', {
+                    body: JSON.stringify({
+                        email: data.email,
+                        fullname: data.name,
+                        subject: 'You have a new message on dvartic.xyz',
+                        message: data.message
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'POST'
+                });
+                const resJson = await res.json();
+                if (resJson.error) {
+                    throw new Error(resJson.error);
+                }
+                else if (!resJson.error) {
+                    toast({
+                        title: 'Success!',
+                        id: 'idSuccess',
+                        description: 'Expect reply within 24hrs',
+                        status: 'success',
+                        duration: 9000,
+                        isClosable: true
+                    })
+                }
             }
-            else if (!resJson.error) {
+            catch (error: any) {
                 toast({
-                    title: 'Success!',
-                    id: 'idSuccess',
-                    description: 'Expect reply within 24hrs',
-                    status: 'success',
+                    title: 'Error:',
+                    id: 'idError',
+                    description: error.message,
+                    status: 'error',
                     duration: 9000,
                     isClosable: true
                 })
             }
         }
-        catch (error: any) {
-            toast({
-                title: 'Error:',
-                id: 'idError',
-                description: error.message,
-                status: 'error',
-                duration: 9000,
-                isClosable: true
-            })
-
+        else if (demoMode) {
+            try {
+                await new Promise(res => setTimeout(res, 2000)); // Simulate API wait time
+                if (simulateError) {
+                    throw new Error('Forbidden');
+                }
+                else if (!simulateError) {
+                    toast({
+                        title: 'Success!',
+                        id: 'idSuccess',
+                        description: 'Expect reply within 24hrs',
+                        status: 'success',
+                        duration: 9000,
+                        isClosable: true
+                    })
+                }
+            }
+            catch (error: any) {
+                toast({
+                    title: 'Error:',
+                    id: 'idError',
+                    description: error.message,
+                    status: 'error',
+                    duration: 9000,
+                    isClosable: true
+                })
+            }
         }
     }
 
@@ -101,6 +154,34 @@ export function ContactComp() {
                 w='100%'
             >
                 <Box>
+                    <Box h={0} w='100%' display='flex' position='relative' bottom={{ base: 98, sm: 98, md: 50, lg: 62, xl: 62, '2xl': 62 }}>
+                        <Box ml='auto'>
+                            <Popover>
+                                <PopoverTrigger>
+                                    <Button colorScheme='pink' size='sm' rightIcon={<ArrowDownIcon />}>Demo Mode</Button>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                    <PopoverArrow />
+                                    <PopoverCloseButton />
+                                    <PopoverHeader fontWeight='bold' m='auto'>Enable/Disable Demo Mode</PopoverHeader>
+                                    <PopoverBody>
+                                        <FormControl display='flex' justifyContent='space-between'>
+                                            <FormLabel htmlFor='email-alerts'>
+                                                Enable Demo Mode
+                                            </FormLabel>
+                                            <Switch id='email-alerts' colorScheme='pink' isChecked={demoMode} onChange={onChangeDemoMode} />
+                                        </FormControl>
+                                        <FormControl display='flex' justifyContent='space-between'>
+                                            <FormLabel htmlFor='email-alerts'>
+                                                Simulate Submission Error
+                                            </FormLabel>
+                                            <Switch id='email-alerts' colorScheme='pink' isDisabled={!demoMode} onChange={onChangeSimulateError} />
+                                        </FormControl>
+                                    </PopoverBody>
+                                </PopoverContent>
+                            </Popover>
+                        </Box>
+                    </Box>
                     <VStack spacing={{ base: 2, md: 6, lg: 10 }}>
                         <Heading
                             textAlign='center'
@@ -110,7 +191,6 @@ export function ContactComp() {
                             }}>
                             Get in Touch
                         </Heading>
-
                         <Flex
                             direction={{ base: 'column', md: 'row' }}
                             w={{ base: '100%', sm: '100%', md: '97%', lg: '80%', xl: '60%', '2xl': '60%' }}
