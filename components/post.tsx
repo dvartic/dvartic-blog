@@ -3,6 +3,7 @@ import NextImage from 'next/image';
 import { MDXRemote } from 'next-mdx-remote';
 import MDXComponents from '../components/MDXComponents';
 import { getFormatDate } from '../lib/date';
+import {QNA} from './tfjs-qna-comp';
 
 interface Props {
     propWidth: string;
@@ -22,9 +23,10 @@ interface Props {
         frontmatter: {};
         scope: {};
     };
+    strippedContent: string
 }
 
-export function Post({ propWidth, propMaxWidth, propMt, propMb, frontmatter, src }: Props) {
+export function Post({ propWidth, propMaxWidth, propMt, propMb, frontmatter, src, strippedContent }: Props) {
 
     // Sets different color variables depending on if the page is in dark or light mode. These variables are then used to set color in components.
     const bgOuterCont = useColorModeValue('white', 'gray.700')
@@ -53,6 +55,7 @@ export function Post({ propWidth, propMaxWidth, propMt, propMb, frontmatter, src
                             <Spacer h='2' />
                             <Text textAlign='center'>{frontmatter.subtitle}</Text>
                         </Box>
+                        <QNA strippedContent={strippedContent}/>
                         <Box w='100%'>
                             <MDXRemote {...src} components={MDXComponents} />
                         </Box>

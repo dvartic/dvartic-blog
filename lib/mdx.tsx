@@ -2,6 +2,8 @@
 import matter from "gray-matter";
 import { serialize } from 'next-mdx-remote/serialize';
 import rehypeHighlight from 'rehype-highlight';
+import {remark} from 'remark';
+import strip from 'strip-markdown'
 import fs from 'fs';
 import path from 'path';
 
@@ -11,7 +13,7 @@ const root = process.cwd();
 // Read content of the directory containing the posts.
 export const getFiles = () => fs.readdirSync(path.join(root, 'data'));
 
-// Returns contents of a specified file, using the serialize function from next-mdx-remote to process it.
+// Returns contents of a specified file, using the serialize function from next-mdx-remote to process it. Additionally, it returns a version with markdown removed.
 export const getFileBySlug = async (slug: string) => {
     const mdxSrc = fs.readFileSync(path.join(root, 'data', `${slug}.mdx`), 'utf-8');
     const { data, content } = await matter(mdxSrc);
@@ -20,7 +22,10 @@ export const getFileBySlug = async (slug: string) => {
             rehypePlugins: [rehypeHighlight]
         }
     });
+    const stripContent = await remark().use(strip).process(content);
+    const strippedContent = String(stripContent);
     return {
+        strippedContent,
         src,
         frontmatter: {
             slug,

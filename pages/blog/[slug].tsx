@@ -10,12 +10,12 @@ interface Params extends ParsedUrlQuery {
     slug: string,
 }
 
-// Get post metadata to display on page. Generates at build time only.
+// Get post data/metadata to display on page. Generates at build time only.
 export const getStaticProps: GetStaticProps = async (context) => {
     const params = context.params as Params
-    const { src, frontmatter } = await getFileBySlug(params.slug);
+    const {strippedContent, src, frontmatter } = await getFileBySlug(params.slug);
     return {
-        props: { src, frontmatter }
+        props: {strippedContent, src, frontmatter }
     }
 }
 
@@ -35,7 +35,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     }
 }
 
-const PostPage: NextPage = ({ src, frontmatter }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const PostPage: NextPage = ({strippedContent, src, frontmatter }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
     // Sets a variable based on the color mode being used, with the objective to also apply a different color theme for code block syntax highlighting
     const codeStyleClass = useColorModeValue('light', 'dark');
@@ -82,7 +82,7 @@ const PostPage: NextPage = ({ src, frontmatter }: InferGetStaticPropsType<typeof
                 />
             </Head>
             <Box className={codeStyleClass}>
-                <Post propWidth={'90%'} propMaxWidth={'1200px'} propMt={14} propMb={14} src={src} frontmatter={frontmatter} />
+                <Post propWidth={'90%'} propMaxWidth={'1200px'} propMt={14} propMb={14} src={src} frontmatter={frontmatter} strippedContent={strippedContent} />
             </Box>
         </>
     )
