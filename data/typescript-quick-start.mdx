@@ -1,0 +1,398 @@
+---
+title: 'TypeScript Quick Start guide for JavaScript users'
+subtitle: 'Basic information and notes to start using TS'
+date: '2022-09-17'
+tag: ['Guides', 'TypeScript']
+image: '/images/post-images/typescript-quick-start-guide.png'
+---
+
+## Introduction. Why should you use TypeScript?
+
+TypeScript is a FOSS language developed by Microsof that is a syntactical superset of JavaScript. At its core, TypeScript adds static typing and improved tooling to the language.
+
+The main benefits of using TypeScript are:
+
+* **Very early identification of bugs and potential problems**: TS, thanks to its type system and tooling, quickly detects incongruences and errors in your code, alerting you immediately. This is a big advantage because early identification of bugs avoids carrying problems that will be much harder to debug down the line.
+* **Predictability**: If a variable is declared as a specific type, it will always remain of that type. Significatly improves the likelihood of your code working as intended.
+* **Type inference**: performs implicit typing to save time.
+* **Readability**: helps readability of your code by declaring types on complex data structures.
+* **Support for advanced data structures**
+
+TS is designed for big projects, however, if you learn the basics, I recommended you to use it for a project of any size.
+
+This article is intended to provide some quick notes and examples to help you start using TypeScript in your projects.
+
+## Type inference
+
+TypeScript will automatically infer types on basic and common declarations.
+
+```ts
+const myVar = 'Hello World'; // Automatically assigns type string
+
+const myObj = {
+    text: 'Hello World',
+    score: 4,
+} // Assigns type string to "text" and number to "score"
+```
+## Functions
+
+### Explicit parameter types
+
+To define parameter types in functions:
+
+```ts
+function greet (name: string) {
+    // Function body
+}
+```
+
+### Optional parameters in Functions
+
+To define a parameter as optional, you use question mark `?` symbol. TypeScript will make the parameter optional, but, when given, it must be of the specified type.
+
+```ts
+function greet (name?: string) {
+    // Function body
+}
+```
+
+### Explicit return types
+
+TS allows you to define types for the returned data of a function (normally this would be inferred, but in some cases you will need to do it manually). After the parentheses that contains the parameters, you can add types for the returned data of your function.
+
+```ts
+// Standard function
+function createGreeting(name: string): string {
+    // Function body
+}
+
+// Arrow function syntax
+const createArrowGreeting = (name: string): string => {
+    // Function body
+}
+// Remember that you should use void type for functions that do not return any value
+```
+
+### Rest parameters
+
+Rest parameter syntax allows a function to accept an indefinite amount of arguments as an array. As such, you should type it as an array:
+
+```ts
+function smush(firstString, ...otherStrings: string[]){
+  // Function body
+}
+```
+
+## Arrays
+
+It is common to see two different syntaxes to type arrays:
+
+```ts
+let names: string[] = ['Danny', 'Samantha'];
+
+// Or using angle bracket syntax
+let names: Array<string> = ['Danny', 'Samantha'];
+```
+
+### Multi-dimensional arrays
+
+Review the following example to type multi-dimensional arrays:
+
+```ts
+let arr: string[][] = [[str1, str2], [str3, str4]];
+```
+
+## Tuples
+
+JavaScript does not differentiate between arrays and tuples. However, in TypeScript, arrays and tuples do not have compatible types (it is not possible to assign an array to a tuple even if the elements that they contain are of the same type).
+
+A tuple works like an array but with fixed length. In TypeScript, you will generally use tuples when you need to create a JavaScript array using mixed data types. Review the following example:
+
+```ts
+let ourTuple: [string, number, string, boolean] = ['Is', 7 , 'our favorite number?' , false];
+// TypeScript understands that this is a tuple because we type each element manually
+```
+
+### Array of Tuples
+
+The following example combines tuples with arrays:
+
+```ts
+let danceMoves: [string, number, boolean][] = [
+  ['chicken beak', 4, false],
+  ['wing flap', 4, false],
+  ['tail feather shake', 4, false],
+  ['clap', 4, false],
+  ['chicken beak', 4, true],
+  ['wing flap', 4, true],
+  ['tail feather shake', 4, true],
+  ['clap', 4, true],
+];
+```
+
+## Enums
+Enums are a feature offered by TypeScript that is also common in other languages. It is not just a type-level extension of JavaScript. TS provides numeric and string enums, numeric being the most common.
+
+To declare an enum, use the `enum` keyword:
+
+```ts
+enum Direction {
+  North,
+  South,
+  East,
+  West
+}
+```
+
+TypeScript will automatically assign numbers to each element. In the example above, North will be assigned `0`, South `1`, East `2`, West `3`. It is also possible to manually assign the first element, so that it starts at another value or to assign all elements manually. For example:
+
+```ts
+enum Direction {
+  North = 1,
+  South,
+  East,
+  West
+// Starts from 1
+}
+```
+The core feature of enums is that they can be used to perform the following: to type, to assign values and to access values. Review the following example:
+
+```ts
+enum Direction {
+  North,
+  South,
+  East,
+  West
+// Assigns numeric values starting from 0
+
+function destination (direction: Direction) { // Uses the enum for typing
+    // Function body
+}
+
+destination(Direction.West); // Uses the enum to access a value
+
+let myVar = Direction.West // Uses the enum to assign a value.
+
+}
+```
+
+You can also use string enums. These always have to be assigned manually. Note that by convention we should capitalize the first letter of the variable name:
+
+```ts
+enum DirectionString { North = 'NORTH', South = 'SOUTH', East = 'EAST', West = 'WEST' }
+```
+
+## Objects
+
+Use the following syntax to type objects directly:
+
+```ts
+let myCompany: {companyName: string, employees: number} = {
+    companyName: 'myCompany',
+    employees: 2,
+}
+```
+
+However, in situations with complex types, TypeScript provides Type Aliases (for general data) and Interfaces (for data shapes, objects).
+
+## Type Aliases and Interfaces
+
+For complex types it is useful to declare them separately in your code to avoid clutter. This is where Type Aliases and Interfaces come in.
+
+```ts
+type Person = { name: string, age: number }
+
+let myPerson: Person = {
+    name: 'John',
+    age: 35,
+}
+```
+
+In recent versions of TypeScript, types and interfaces work similarly in practice. However, you should use Types for general data typing, such as arrays and tuples. Interfaces are intended for data shapes such as objects. Inferfaces provide more features, such as declaration merging, extends or implements. If you want to read more on the differences, check this [article](https://blog.logrocket.com/types-vs-interfaces-in-typescript/).
+
+We should rewrite the previous example using `interface`. Take note of syntax differences:
+
+```ts
+interface Person {
+    name: string;
+    age: number;
+    }
+
+let myPerson: Person = {
+    name: 'John',
+    age: 35,
+}
+```
+
+## Interfaces and Classes
+
+Interfaces allow you to type classes using the `implements` keyword:
+
+```ts
+interface Robot {
+  identify: (id: number) => void;
+}
+ 
+class OneSeries implements Robot {
+  identify(id: number) {
+    console.log(`beep! I'm ${id.toFixed(2)}.`);
+  }
+ 
+  answerQuestion() {
+    console.log('42!');
+  }
+}
+```
+
+In the example above, the `OneSeries` class is required to implement a method named `identify` as required by the `Robot` interface. The interface sets a minimum requirement, but the class can have additional methods and properties on its own without TS throwing any error.
+
+## Generics
+
+Generics allow you to specify a type variable that changes depending on the call. This can be useful in some cases:
+
+```ts
+function getFilledArray<T>(val: T, n: number): T[] { // T is a type variable.
+    return Array(n).fill(value)
+}
+
+getFilledArray<string>('hi', 6); // T gets string assigned on function call.
+getFilledArray<number>(4, 3); // T gets number assigned on function call.
+```
+
+## Unions
+
+Unions allow you to define multiple types for the same variable. This feature is very common in TS.
+
+```ts
+let myVal: number | string;
+
+// number
+myVal = 1
+
+// string
+myVal = 'Hello World'
+```
+
+### Unions and Arrays
+
+This is one practical example of unions: an array that can have multiple types.
+
+```ts
+const dateNumber = new Date().getTime(); // returns a number
+const dateString = new Date().toString(); // returns a string
+
+const timesList: (string | number)[] = [dateNumber, dateString]; // Take note of the syntax
+```
+
+## Type Narrowing and Common Key Value Pairs
+
+If we allow multiple data types on a variable, TypeScript by default will only allow us to access common methods and properties that all members of the union share. To access specific methods and properties of a type, we need to perform type checking (also called type narrowing).
+
+```ts
+function processVal (myVal: string | number) {
+    if (typeof myVal === 'string') {
+        let myValUpperCase = myVal.toUpperCase();
+    }
+}
+// We would no be able to use toUpperCase method unless we type check beforehand.
+```
+
+## Literal Types
+
+You are also allowed to create literal types in TypeScript. In the following example, only the values provided by the type are allowed:
+
+```ts
+type Color = 'green' | 'yellow' | 'red';
+ 
+function changeLight(color: Color) {
+  // ...
+}
+```
+
+## The in keyword in Type Guards
+
+You can use the `in` keyword to check if a property exists in an object anywhere withing its prototype chain. In the following example, the function parameter can take the form of two types of objects, each with a different method. We use the `in` keyword to detect if the method exists in the parameter.
+
+```ts
+type Tennis = {
+  serve: () => void;
+}
+ 
+type Soccer = {
+  kick: () => void;
+}
+ 
+function play(sport: Tennis | Soccer) {
+  if ('serve' in sport) {
+    return sport.serve();
+  }
+ 
+  if ('kick' in sport) {
+    return sport.kick();
+  }
+}
+```
+
+TypeScript can also automatically detect that an else statement is the opposite type guard check, without the need to manually declare it.
+
+## Composing Types and Interfaces
+
+You can create types and interfaces and reference them in other types and interfaces. This is essential when you have a lot of nesting.
+
+```ts
+interface About {
+  general: General;
+}
+ 
+interface General {
+  id: number;
+  name: string;
+  version: Version;
+}
+ 
+interface Version {
+  versionNumber: number;
+}
+```
+
+## Extending interfaces
+
+You can copy all types from one interface to another using the `extends` keyword.
+
+```ts
+interface Shape {
+  color: string;
+}
+ 
+interface Square extends Shape {
+  sideLength: number;
+}
+ 
+const mySquare: Square = { sideLength: 10, color: 'blue' };
+```
+
+## Index Signatures
+
+With objects, sometimes it's not possible to known the property names beforehand. This is common when dealing with external APIs. But you may still know a basic structure of the data. TypeScript provides a feature called Index Signatures to solve this problem.
+
+We might get data from an API that looks like this:
+
+```JSON
+{
+  '40.726776': true;
+  '41.203323': true;
+  '40.417286': false;
+}
+```
+
+The property names are unknown beforehand. To type this data, we can use the following interface. Take note of the syntax using brackets:
+
+```ts
+interface SolarEclipse {
+  [latitude: string]: boolean;
+}
+```
+
+## Conclusion
+
+I hope that this article serves as a quick overview of some of the features that you may need to use when implementing TypeScript in your projects. As I wrote earlier, in my opinion the advantages provided by TypeScript outweigh the extra work required to deal with its type system and I recommend you to use it for your projects.
