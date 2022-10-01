@@ -229,7 +229,7 @@ export function ContactComp() {
                                     />
                                 </Tooltip>
 
-                                <Link href="#">
+                                <Link href="https://github.com/dvartic" isExternal>
                                     <IconButton
                                         aria-label="github"
                                         variant="ghost"
