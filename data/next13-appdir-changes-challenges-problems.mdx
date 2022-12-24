@@ -1,0 +1,196 @@
+---
+title: "Next 13 AppDir changes, challenges and problems"
+subtitle: "Find potential solutions and decide if you should use it"
+date: "2022-12-24"
+tag: ["Next.js", "AppDir"]
+image: "/images/post-images/next13-appdir-changes-challenges.png"
+---
+
+Next 13 introduced a number of changes, many of them breaking, to core parts of the framework. This update is one of the biggest in Next's history. Among these changes there is a new `app` directory that replaces the previous `pages` directory and redesigns a lot of the workflow and components. Currently, this AppDir feature is in beta and it is not advisable to use it in production, since you will encounter problems ranging from documentation, integration with other libraries, bugs and potential new breaking changes when the features becomes stable. However, I have been using the new AppDir features in my projects for a while and I would like to share my experience with it, including a summary of the main changes, challenges you may face and problems that I have encountered (as of end of 2022).
+
+## Quick overview of the changes that AppDir brings
+
+The `app` directory is a new reserved folder to replace the previous `pages` directory with redesigned workflows and components. These changes affect many parts including routing, data fetching, rendering, caching, and optimizations. I've compiled a list for a quick overview. Be sure to check [Next.js 13 Beta Docs](https://beta.nextjs.org/docs/getting-started) for more information.
+
+-   **Introduction of React Server Components**: the new AppDir uses Server Components by default, which are only meant to execute on the server. This provides a clear distinction of code that is meant to run on the server vs the client, something that was confusing before and a source of many criticisim. Moreover, Server Components provide higher performance for SSR (because they can be rendered in the server at the component level) and enable new data fetching strategies. [Read more](https://beta.nextjs.org/docs/rendering/server-and-client-components).
+
+-   **New file-system routing**: there are many changes in this category. A new way of defining routes has been introduced, with more emphasis on folders and new files with different workflows such as `pages.tsx`, `head.tsx`, `layout.tsx`, `template.tsx`, `loading.tsx` or new error handling techniques with files such as `error.tsx`, `not-found.tsx`. [Read more](https://beta.nextjs.org/docs/routing/fundamentals).
+
+-   **New data fetching patterns**: `getServerSideProps`, `getStaticProps` and `getInitialProps` are not supported anymore. Instead, a new Fetch API has been introduced for React Server Components that allows data fetching in a more streamlined way. Whereas previously you would use one of the mentioned functions, now you simply fetch data on the Server Component, with new patterns to define different caching strategies and deal with dynamic routes. [Read more](https://beta.nextjs.org/docs/data-fetching/fundamentals).
+
+-   **New optimizations**: these includes changes to `next/image`, `@next/font`, `next/script` and a new lazy loading technique using React.lazy(). [Read more](https://beta.nextjs.org/docs/optimizing/lazy-loading).
+
+## Common challenges and solutions when implementing AppDir
+
+1. Using React libraries that depende on a React Context Provider.
+
+In the `pages` directory you would place your Context Providers in `_app.tsx`. In AppDir, both `_app.tsx` and `_document.tsx` have been replaced by `layout.tsx` (some of the functionality from `_document.tsx` has been moved to other files as well). However, `layout.tsx` can only be a Server Component and Context Providers cannot be used in them. The problem arises because these libraries have not yet included a `'use-client;` directive.
+
+The solution is to create another component in another file (you can call it `providers.tsx`), use the `'use-client';` directive, and import that component into `layout.tsx`. Here is an example using ChakraUI's Provider:
+
+```tsx
+// providers.tsx
+"use client";
+
+import { ChakraProvider } from "@chakra-ui/react";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+    return (
+        <>
+            <ChakraProvider>{children}</ChakraProvider>
+        </>
+    );
+}
+```
+
+```tsx
+// layout.tsx
+import { Providers } from "./providers";
+
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <html lang="en" style={{ scrollBehavior: "smooth" }}>
+            <body>
+                <Providers>{children}</Providers>
+            </body>
+        </html>
+    );
+}
+```
+
+2. Fetching data in dynamic routes in combination with `generateStaticParams()`
+
+`generateStaticParams()` is a new function introduced by Next.js 13 AppDir to define route parameters statically at build time instead of dynamically (which is what would happen if this function was not used). As the docs suggest, it is possible to use `generateStaticParams()` with standard fetching based on route parameters to get data for each route:
+
+```tsx
+import {getPostBySlug} from '../lib/fetching';
+
+export async function generateStaticParams() {
+  const posts = await getPosts();
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
+export default function Page({ params }) {
+  const { slug } = params;
+
+  const post = getPostBySlug(slug);
+
+  return ...
+}
+```
+
+However, by default, routes not included in the return statement in `generateStaticParams()` will still get evaluated at request time. This behaviour is controlled by the route segment configuration option `dynamicParams` that takes a boolean value. If `dynamicParams` is set to `false`, any route segments that are not included in `generateStaticParams()` will return a 404 error.
+
+```tsx
+// layout.tsx
+export const dynamicParams = false; // true | false,
+```
+
+If you leave the default option or you set it to true, you need to handle errors in your data fetching functions appropiately, as Next will feed it any value from the dynamic route. To handle errors, you can use the new `notFound()` feature or throw an error to then catch it using the new `error.tsx` pattern.
+
+3. Enter animations between routes
+
+Next.js 13 AppDir introduces a new file `template.tsx` that works in a similar way to `layout.tsx` but unmounts elements on route changes. You should use this file to put animation components from animation libraries when you want to set route change animations, instead of manually placing them on each `page.tsx`. `template.tsx` can be a Client Component. Here is an example using Framer Motion:
+
+```tsx
+// template.tsx
+"use client";
+
+import { motion } from "framer-motion";
+
+export default function Template({ children }: { children: React.ReactNode }) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+        >
+            {children}
+        </motion.div>
+    );
+}
+```
+
+Be aware that currently Framer Motion's exit animations using Animate Presence do not work appropiately. Even though `layout.tsx` does not unmount on route changes, and `template.tsx` componentes receive a key prop unique to each route, Animate Presence still doesn't work. [Framer Motion Issue #1375](https://github.com/framer/motion/issues/1375)
+
+## Potential problems that you may encounter
+
+1. `error.tsx` appears to not always be called, specially when the error happens on the server.
+
+2. `notFound()` appears to not always fire a 404 error page or a custom `not-found.tsx` page.
+
+3. Framer Motion's Animate Presence does not work when placed inside `layout.tsx`.
+
+4. `template.tsx` seems to not propagate to two or more nested routes, requiring you declare it again for those routes.
+
+5. `head.tsx` throws an error when attempting to set `json-ld` structured data using a `<script>` tag.
+
+The following code throws an error:
+
+```tsx
+export default async function Head({ params }: Props) {
+    // Function to generate Structured Data in JSON-LD for each blog post. Currently not working issue #44287 Next.js.
+    function addBlogJsonLd() {
+        return {
+            __html: `{
+                "@context": "https://schema.org", 
+                "@type": "BlogPosting",
+
+                }`,
+        };
+    }
+
+    return (
+        <>
+            <DefaultTags />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={addBlogJsonLd()}
+                key="product-jsonld"
+                async
+            />
+        </>
+    );
+}
+```
+
+Possible workaround is to use `next/script` in `page.tsx` directly, although this is not ideal since the JSON-LD will be placed in the `<body>` instead of the `<head>`. Workaround proposed in [Issue #44287](https://github.com/vercel/next.js/issues/44287) by ElektrikSpark.
+
+```tsx
+// page.tsx
+import Script from "next/script";
+
+export default async function BlogPost({ params }: Props) {
+    // Function to generate Structured Data in JSON-LD for each blog post. Used here in page.tsx to workaround issue #44287 Next.js.
+    function addBlogJsonLd() {
+        return {
+            __html: `{
+                "@context": "https://schema.org", 
+                "@type": "BlogPosting",
+                }`,
+        };
+    }
+    return (
+        <>
+            <Script
+                id="app-ld-json"
+                type="application/ld+json"
+                dangerouslySetInnerHTML={addBlogJsonLd()}
+            />
+            <main>
+                <Post />
+            </main>
+        </>
+    );
+}
+```
+
+## Conclusion
+
+Next 13 AppDir introduces many changes that improve a lot of the core componentes of Next.js. However, it has some problems that make it not production ready yet. You may still consider using it if your project is not critical or if development may last for several months, but it is generally not recommended.
