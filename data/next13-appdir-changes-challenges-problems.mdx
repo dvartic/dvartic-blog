@@ -24,9 +24,9 @@ The `app` directory is a new reserved folder to replace the previous `pages` dir
 
 1. Using React libraries that depende on a React Context Provider.
 
-In the `pages` directory you would place your Context Providers in `_app.tsx`. In AppDir, both `_app.tsx` and `_document.tsx` have been replaced by `layout.tsx` (some of the functionality from `_document.tsx` has been moved to other files as well). However, `layout.tsx` can only be a Server Component and Context Providers cannot be used in them. The problem arises because these libraries have not yet included a `'use-client;` directive.
+In the `pages` directory you would place your Context Providers in `_app.tsx`. In AppDir, both `_app.tsx` and `_document.tsx` have been replaced by `layout.tsx` (some of the functionality from `_document.tsx` has been moved to other files as well). However, `layout.tsx` can only be a Server Component and Context Providers cannot be used in them. The problem arises because these libraries have not yet included a `'use client;` directive.
 
-The solution is to create another component in another file (you can call it `providers.tsx`), use the `'use-client';` directive, and import that component into `layout.tsx`. Here is an example using ChakraUI's Provider:
+The solution is to create another component in another file (you can call it `providers.tsx`), use the `'use client';` directive, and import that component into `layout.tsx`. Here is an example using ChakraUI's Provider:
 
 ```tsx
 // providers.tsx
