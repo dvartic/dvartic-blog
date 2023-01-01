@@ -1,0 +1,170 @@
+---
+title: "React Context Get Started Guide"
+subtitle: "Learn the basics of React Context"
+date: "2023-01-01"
+tag: ["React", "Context"]
+image: "/images/post-images/react-context-quick-start.png"
+---
+
+React Context is a solution to make data available through the component tree without having to manually pass down props at every level. It essentially provides a global state easily accessible from any component that is wrapped inside the Context Provider. Example of use cases are a UI Theme or a locale preference.
+
+You should use React Context when you have data that needs to be accessible by many components at different nesting levels. If this is not your problem, you may prefer to use basic React props or React [component composition](https://reactjs.org/docs/composition-vs-inheritance.html).
+
+## Basic use, behaviour and API
+
+React Context contains to main hooks:
+
+-   `createContext()`: the main hook to create a Context Provider. It returns an object that includes a property `Provider` that you can use to wrap your components so that they have access to the Context data. Requires a default value to be passed as an argument.
+-   `useContext()`: main hook to consume data from the React Context. Requires the Context to be passed as an argument and returns the data that is passed to the `value` prop of the Context Provider.
+
+Let's see how to use them in a simple example:
+
+```tsx
+export const ThemeContext = createContext(true);
+
+export default function App() {
+    const [lightTheme, setLightTheme] = useState(true);
+
+    function toggleTheme() {
+        setLightTheme((prevLightTheme) => !prevLightTheme);
+    }
+
+    return (
+        <ThemeContext.Provider value={lightTheme}>
+            <button onClick={toggleTheme}>Change Theme</button>
+            <MyComponent1 />
+            <MyComponent2 />
+        </ThemeContext.Provider>
+    );
+}
+```
+
+We created a React Context using `createContext()` and we passed a default value of `true` to it. Then, we created a component that has a state, controlled by a button. Each time this button is pressed the state changes. When we wrapped our components with the React Context Provider and we passed a value consisting of the state of the component, this value can now be accessed by all childrens of the Provider without the need to pass props.
+
+The following basic example shows how you can access Context data from one of these child components (or any other component down the tree at any level).
+
+```tsx
+import { ThemeContext } from "./App";
+
+export function MyComponent1() {
+    const lightTheme = useContext(ThemeContext);
+    return (
+        <div>
+            <p>{`The current theme is ${lightTheme ? "light" : "dark"}`}</p>
+        </div>
+    );
+}
+```
+
+We import the React Context object that we created before. Then, we use the `useContext()` hook to access data from the Context. This will return the `value` prop that we passed to the Provider.
+
+You may have noticed that this basic example has a few problems that make it not very useful. First, we created the React Context in the same place where the state or data is generated (in this example, where the button is). In practice this state could be generated anywhere in your React application, and you Context Provider typically will need to be located at the top of the component tree.
+
+Secondly, we have to import the React Context object in every component that needs to access the data, which can be cumbersome.
+
+We will solve these problems in the next section.
+
+## React Context with custom hooks: practical example
+
+In this section we will see how to implement React Context in a more useful way. This would be the approach that you will typically implement in a real application.
+
+We will create a separate file that will contain the React Context independently and export a few hooks that will allow us to both consume and update the Context State. In addition, we will also export a React component containing the Context Providers, using React Composition to be able to place it anywhere in our tree (typically at the top).
+
+```tsx
+import { createContext, useContext, useState } from "react";
+
+const ThemeContext = createContext(true);
+const UpdateThemeContext = createContext(() => {});
+
+export function useThemeContext() {
+    if (ThemeContext === undefined) {
+        throw new Error("useThemeContext must be used within a ThemeProvider");
+    }
+    return useContext(ThemeContext);
+}
+
+export function useUpdateThemeContext() {
+    if (UpdateThemeContext === undefined) {
+        throw new Error(
+            "useUpdateThemeContext must be used within a ThemeProvider"
+        );
+    }
+    return useContext(UpdateThemeContext);
+}
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+    const [lightTheme, setLightTheme] = useState(true);
+
+    function toggleTheme() {
+        setLightTheme((prevLightTheme) => !prevLightTheme);
+    }
+
+    return (
+        <ThemeContext.Provider value={lightTheme}>
+            <UpdateThemeContext.Provider value={toggleTheme}>
+                {children}
+            </UpdateThemeContext.Provider>
+        </ThemeContext.Provider>
+    );
+}
+```
+
+In the example above, we created a separate file containing our Context Provider. In this file, we created two React Contexts, `ThemeContext` that will hold our current theme state, and `UpdateThemeContext` that will hold a function to update the theme state.
+
+Then, we exported two hooks for these two Contexts. `useThemeContext()` returns the value of `ThemeContext`. First, it checks wether this function is being called from a component that is inside the correct Context Provider. If it is, then executes `useContext()` on `ThemeContext` to return the value stored. `useUpdateContext()` does a similar thing, returning instead a value of a function that will allow us to update the state contained in the Provider.
+
+Lastly, we create a React component using composition, that takes React components as props and wraps Providers around it. In this component, we use `useState()` to locally track the state of the theme. Then, we create a function `toggleTheme()` that update this state. The components are wrapped in React Context Providers with the appropiate `value` prop. `ThemeContext.Provider` receives the current state of the theme, and `UpdateThemeContext.Provider` receives the function to update the theme state `toggleTheme()`.
+
+After writing this file, we can import this React component to place our providers where we need them (typically at the top):
+
+```tsx
+import { ThemeProvider } from "./ThemeProvider";
+
+export default function App() {
+    return (
+        <ThemeProvider>
+            <MyApp />
+        </ThemeProvider>
+    );
+}
+```
+
+In this example, we wrap all of our app inside the `ThemeProvider`. This will give optional access to the Context on all child components.
+
+Then, we can use the hooks that we exported from the `ThemeProvider` file to access Context data and update it:
+
+To update it:
+
+```tsx
+import { useUpdateThemeContext } from "./ThemeProvider";
+
+export function MyComponent1() {
+    const toggleTheme = useUpdateThemeContext();
+    return (
+        <div>
+            <button onClick={toggleTheme}>Change Theme</button>
+        </div>
+    );
+}
+```
+
+To access the data:
+
+```tsx
+import { useThemeContext } from "./ThemeProvider";
+
+export function MyComponent2() {
+    const ligtTheme = useThemeContext();
+    return (
+        <div>
+            <p>{`The current theme is ${lightTheme ? "light" : "dark"}`}</p>
+        </div>
+    );
+}
+```
+
+This basic pattern can be extended and adapted to more complex uses. More complex logic can be used inside the Provider and more complex data can also be stored.
+
+## Conclusion
+
+React Context a is a great and simple tool to share state in your React application, without the need to pass props or use complex state management libraries if you don't need to. Hopefully, this article has helped you understand the basics of React Context so that you can being to use it in your application.
