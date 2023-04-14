@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, HamburgerIcon, SunIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
-import { useMemo } from "react";
 import { Codesquare01 } from "./custom-icons/codesquare01";
 import { Github } from "./custom-icons/github";
 import { useRouter } from "next/router";
@@ -47,10 +46,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
 
     // Detects wether the device supports hover or not through a media query, and executes a simple logic with memoized value to assign a different text-decoration property.
     const [isHoverNotSupported] = useMediaQuery("(hover: none)");
-    const hover = useMemo(
-        () => (isHoverNotSupported ? { textDecoration: "none" } : { textDecoration: "underline" }),
-        [isHoverNotSupported]
-    );
+    const hover = () => (isHoverNotSupported ? { textDecoration: "none" } : { textDecoration: "underline" });
 
     // Detects whether the current route is `/blog` and '/contact' (active) and stores a different value in the variables, which is then used to change the 'Blog' and 'Contact' Link color
     const router = useRouter();
@@ -75,7 +71,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                 >
                     <NextLink href={"/"} passHref scroll={false}>
                         <Link
-                            _hover={hover}
+                            _hover={hover()}
                             _active={{ color: activeColorLink }}
                             as={motion.a}
                             initial="rest"
@@ -105,7 +101,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                                 display="flex"
                                 alignItems="center"
                                 color={blogLinkColor}
-                                _hover={hover}
+                                _hover={hover()}
                                 _active={{ color: activeColorLink }}
                             >
                                 Blog
@@ -116,7 +112,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                                 display="flex"
                                 alignItems="center"
                                 color={projectsLinkColor}
-                                _hover={hover}
+                                _hover={hover()}
                                 _active={{ color: activeColorLink }}
                             >
                                 Projects
@@ -127,7 +123,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                                 display="flex"
                                 alignItems="center"
                                 color={contactLinkColor}
-                                _hover={hover}
+                                _hover={hover()}
                                 _active={{ color: activeColorLink }}
                             >
                                 Contact
@@ -139,7 +135,7 @@ export function Header({ propWidth, propMaxWidth }: Props) {
                             alignContent="center"
                             href="https://github.com/dvartic"
                             isExternal
-                            _hover={hover}
+                            _hover={hover()}
                             _active={{ color: activeColorLink }}
                         >
                             <HStack>

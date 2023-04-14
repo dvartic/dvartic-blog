@@ -1,6 +1,6 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import { ContactComp } from '../components/contact-comp';
+import type { NextPage } from "next";
+import Head from "next/head";
+import { ContactComp } from "../components/contact-comp";
 
 const Contact: NextPage = () => {
     return (
@@ -16,7 +16,7 @@ const Contact: NextPage = () => {
             </Head>
             <ContactComp />
         </>
-    )
-}
+    );
+};
 
-export default Contact
+export default Contact;

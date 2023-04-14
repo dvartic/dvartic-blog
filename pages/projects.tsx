@@ -16,7 +16,7 @@ const Projects: NextPage = () => {
                 <meta property="og:image" content="/images/pfp.png" />
             </Head>
             <Banner />
-            <ProjectsCards propWidth={"90%"} propMaxWidth={"750px"} propMt={20} propMb={20} />
+            <ProjectsCards />
         </>
     );
 };
