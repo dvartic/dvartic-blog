@@ -2,6 +2,7 @@ import { Wrap, WrapItem, VStack, Box, Text, LinkBox, LinkOverlay, useMediaQuery 
 import NextImage from "next/image";
 import edepoImage from "../public/images/projects-images/edepo_eyecatch.png";
 import opodatosImage from "../public/images/projects-images/opodatos_eyecatch.png";
+import terryadavisImage from "../public/images/projects-images/terryadavis_eyecatch.png";
 
 interface Props {
     propWidth: string;
@@ -80,6 +81,37 @@ export function ProjectsCards({ propWidth, propMaxWidth, propMt, propMb }: Props
                                     A full-stack data mining project aiming to solve information asymmetry in government
                                     hiring processes. Made using React, Next, Vitess, Scrapy and multiple data analysis
                                     tools.
+                                </Text>
+                            </VStack>
+                        </VStack>
+                    </LinkBox>
+                </WrapItem>
+
+                {/* Terry A. Davis */}
+                <WrapItem>
+                    <LinkBox>
+                        <VStack maxW={isSmallerThan786 ? "550px" : "xs"} w="100%" spacing={6} _hover={{ opacity: 0.8 }}>
+                            <Box position="relative" w="100%">
+                                <NextImage
+                                    src={terryadavisImage}
+                                    alt="EDEPO Web Screenshot"
+                                    objectFit="contain"
+                                    style={{ borderRadius: "0.75rem" }}
+                                />
+                            </Box>
+                            <VStack textAlign="center" align="center">
+                                <LinkOverlay
+                                    href="https://dvartic.github.io/terrydavis-website/"
+                                    target="_blank"
+                                    fontWeight="bold"
+                                    fontSize="3xl"
+                                >
+                                    Terry A. Davis Tribute Website
+                                </LinkOverlay>
+                                <Text>
+                                    A simple, TempleOS inspired website made as a tribute to Terry A. Davis, a very
+                                    talented programmer that suffered from schizophrenia. Built without using any
+                                    library or framework, just HTML, CSS and JavaScript.
                                 </Text>
                             </VStack>
                         </VStack>
