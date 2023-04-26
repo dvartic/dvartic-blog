@@ -22,7 +22,7 @@ The front-end is based on the following technologies:
 -   [react-i18next](https://react.i18next.com/): library used for i18n functionality.
 -   [Framer Motion](https://www.framer.com/motion/): animation library with a great declarative API.
 
-The fron-end utilizes several techniques to improve performance. These are some examples:
+The front-end utilizes several techniques to improve performance. These are some examples:
 
 ### React Suspense and lazy loading of heavy elements such as video:
 
@@ -203,7 +203,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        // This should be the actual path not a rewritten path
         const slug = req.query.slug;
         if (!slug) {
             await res.revalidate("/");
@@ -227,7 +226,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 ### Static Site Generation
 
-Where appropriate, pages are generated ahead of time for performance.
+Pages that do not depend on dynamic data are generated ahead of time for performance.
 
 ### Route prefetching
 
@@ -250,7 +249,7 @@ const cookieName = "i18next";
 export function middleware(req: NextRequest) {
     let lng;
     if (req.cookies.has(cookieName)) lng = acceptLanguage.get(req.cookies.get(cookieName)?.value);
-    // if (!lng) lng = acceptLanguage.get(req.headers.get("Accept-Language")); // This line is responsible for detecting or not request headers language preference
+    // if (!lng) lng = acceptLanguage.get(req.headers.get("Accept-Language"));
     if (!lng) lng = fallbackLng;
 
     if (
