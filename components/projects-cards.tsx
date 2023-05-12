@@ -2,6 +2,7 @@ import { Wrap, WrapItem, VStack, Box, Text, LinkBox, LinkOverlay, useMediaQuery 
 import NextImage from "next/image";
 import edepoImage from "../public/images/projects-images/edepo_eyecatch.png";
 import opodatosImage from "../public/images/projects-images/opodatos_eyecatch.png";
+import isThisPersonToxicImage from "../public/images/projects-images/isthispersontoxic_eyecatch.png";
 import terryadavisImage from "../public/images/projects-images/terryadavis_eyecatch.png";
 
 const cardData = [
@@ -20,6 +21,14 @@ const cardData = [
         title: "OpoDatos",
         subtitle:
             "A full-stack data mining project that aims to solve information asymmetry in government hiring processes. Made using React, Next, Vitess, Scrapy and multiple data analysis tools.",
+    },
+    {
+        image: isThisPersonToxicImage,
+        alt: "isThisPersonToxic Web Screenshot",
+        link: "https://www.isthispersontoxic.com/",
+        title: "isThisPersonToxic",
+        subtitle:
+            "A full-stack project that uses Perspective API ML to analyze comments and generate reports on toxicity. Made using React, Next and MongoDB.",
     },
     {
         image: terryadavisImage,
