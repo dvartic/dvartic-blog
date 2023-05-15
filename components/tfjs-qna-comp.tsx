@@ -8,6 +8,14 @@ import {
     useDisclosure,
     Collapse,
     useToast,
+    useMediaQuery,
+    Popover,
+    PopoverTrigger,
+    IconButton,
+    PopoverContent,
+    PopoverArrow,
+    PopoverCloseButton,
+    PopoverBody,
 } from "@chakra-ui/react";
 import { ArrowDownIcon, InfoIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import { useState } from "react";
@@ -26,6 +34,9 @@ export function QNA({ strippedContent }: Props) {
     // State Management for model
     const [model, setModel] = useState<qna.QuestionAndAnswer>();
     const [isModelLoading, setIsModelLoading] = useState(false);
+
+    // Detect hover capability to render either a tooltip or popover
+    const [isHoverNotSupported] = useMediaQuery("(hover: none)");
 
     // Color mode control
     const bgColor = useColorModeValue("blue.50", "blue.800");
@@ -83,13 +94,31 @@ export function QNA({ strippedContent }: Props) {
         <Box w="100%">
             <Box display="flex" w="100%" h={0} position="relative" top={1} right={1}>
                 <Box h={0} ml="auto">
-                    <Tooltip
-                        label="Load a TensorFlow AI/ML Model trained to answer questions in natural language."
-                        fontSize="md"
-                        hasArrow
-                    >
-                        <InfoIcon />
-                    </Tooltip>
+                    {isHoverNotSupported ? (
+                        <Popover>
+                            <PopoverTrigger>
+                                <IconButton
+                                    variant="ghost"
+                                    aria-label="More information on AI/ML Model"
+                                    icon={<InfoIcon boxSize={"4"} />}
+                                />
+                            </PopoverTrigger>
+                            <PopoverContent>
+                                <PopoverArrow />
+                                <PopoverBody>
+                                    Load a TensorFlow AI/ML Model trained to answer questions in natural language.
+                                </PopoverBody>
+                            </PopoverContent>
+                        </Popover>
+                    ) : (
+                        <Tooltip
+                            label="Load a TensorFlow AI/ML Model trained to answer questions in natural language."
+                            fontSize="md"
+                            hasArrow
+                        >
+                            <InfoIcon />
+                        </Tooltip>
+                    )}
                 </Box>
             </Box>
             <VStack w="100%" bg={bgColor} borderTop="2px" borderBottom="2px" borderColor="black" pt={2} pb={2}>
@@ -114,3 +143,31 @@ export function QNA({ strippedContent }: Props) {
         </Box>
     );
 }
+
+/* 
+{isHoverNotSupported ? (
+                    <Popover>
+                        <LightMode>
+                            <PopoverTrigger>
+                                <IconButton
+                                    position="relative"
+                                    bottom="2px"
+                                    variant="ghost"
+                                    aria-label="More information on attribute"
+                                    icon={<InfoIcon boxSize={{ base: "5", sm: "6" }} />}
+                                />
+                            </PopoverTrigger>
+                        </LightMode>
+                        <PopoverContent>
+                            <PopoverArrow />
+                            <PopoverCloseButton color={popoverColor} />
+                            <PopoverBody color={popoverColor}>{description}</PopoverBody>
+                        </PopoverContent>
+                    </Popover>
+                ) : (
+                    <Tooltip label={description} fontSize="md">
+                        <InfoIcon position="relative" bottom="2px" boxSize={{ base: "5", sm: "6" }} />
+                    </Tooltip>
+                )}
+
+*/
