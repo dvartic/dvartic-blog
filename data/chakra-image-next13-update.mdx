@@ -1,0 +1,146 @@
+---
+title: "Next.js Image and ChakraUI - Next 13 Update"
+subtitle: "Integrate Next.js 13 Image with ChakraUI"
+date: "2023-05-15"
+tag: ["Next", "Chakra"]
+image: "/images/post-images/chakra-nextjs-update-13.png"
+---
+
+## Update over previous version
+
+A few months ago I wrote an article talking about integration between Next Image and ChakraUI. I noticed that this post is getting quite a bit of traffic but, since I wrote it, Next.js 13 has been released and some of the information is outdated. [Link to the original post](/blog/chakra-next-image-components)
+
+In this new article we are going to quickly go through some of the differences in the new Next Image component and provide some updated code snippets. The recommended way to deal with the Next component is still the same: **utilize a parent `Box` Chakra component**.
+
+## The changes in Next.js 13
+
+Same as before, the Next Image component extends the HTML `img` element with size optimization, visual stability, faster page load and asset flexibility. The advantages of using it stay the same.
+
+However, the new component changes the way it works in the back. Some of the changes include:
+
+-   **Removed `<span>` wrapper **: it instead uses [native computed aspect ratio](https://caniuse.com/mdn-html_elements_img_aspect_ratio_computed_from_attributes)
+-   **Removed `IntersectionObserver` implementation**: uses native [lazy loading](https://caniuse.com/loading-lazy-attr) instead.
+
+These changes and the implementation of community feedback resulted in a slightly revised API:
+
+-   **Removed `layout` `objectFit` `objectPosition` props**: these are now set using the newly extended `style` prop, along with any CSS you want to pass. E.g. `style={{ zIndex: 1, objectFit: "contain" }}`
+-   **New `fill` prop**: allows to make the image grow to fill its parent container (with some caveats, more on this later). Replaces some of the uses of the previous `layout='responsive'` prop.
+-   **Changed `alt` prop from optional to required**.
+
+More information about changes on Next.js [docs](https://nextjs.org/docs/messages/next-image-upgrade-to-13).
+
+## Quick overview of the API
+
+### Two ways to import an image:
+
+-   **Local image**: import from the local filesystem. This is the recommended way, when possible. `width`, `height` and `blurDataURL` are automatically provided.
+
+```tsx
+import NextImage from "next/image";
+import photo from "/public/steps/photo.png";
+
+<NextImage
+    src={photo}
+    alt="My Photo"
+    sizes="(max-width: 768px) 100vw, 50vw"
+    style={{ zIndex: 1 }}
+    placeholder="blur"
+/>;
+```
+
+Note how we can directly use `placeholder='blur'` without providing a `blurDataURL`. Also note that you should import the image instead of using a local URL in the public directory. Avoid `src='/public/steps/photo.png'`
+
+-   **Remote image**: import from a remote source. Configuration is needed in `next.config.js` to allow specific remote sources. You will need to specificy `width`, `height` and `blurDataURL`.
+
+```tsx
+import NextImage from "next/image";
+
+<NextImage
+    src={"https://remote-source.com/profile.png"}
+    alt="My Photo"
+    heigth={200}
+    width={200}
+    sizes="(max-width: 768px) 100vw, 50vw"
+    style={{ zIndex: 1 }}
+    blurDataURL="https://remote-source.com/blur.jpg"
+    placeholder="blur"
+/>;
+```
+
+### Main configuration props that you will use
+
+-   **`sizes`**: configure image optimization using breakpoints. You should always provide this value, although it is not strictly required. Based on breakpoints, it will reduce or increase quality of the image to make sure size is optimal. As an example, the code `sizes="(max-width: 768px) 100vw, 50vw"` will make the image 100% of the viewport width on screens smaller than 768px and 50% of the viewport width on larger screens.
+-   **`style`**: pass any general CSS that you need including `objectFit`. E.g. `style={{ zIndex: 1, objectFit: "contain" }}`
+-   **`placeholder`**: set to `blur` to use a blur placeholder while the image is loading (remember that all Next Image components are lazy loaded by default when they enter the viewport).
+-   **`fill`**: boolean. Set it to `true` to make the image grow to fill its parent container. More on this later.
+
+## Chakra UI integration with fixed withd and height
+
+Use a parent `Box` or other Chakra component to manipulate position and other behavior.
+
+```tsx
+<Box w="100%" h="100%" position="relative">
+    <NextImage
+        src={localImage}
+        alt="My Image"
+        sizes="(max-width: 768px) 100vw, 50vw"
+        style={{ zIndex: 1 }}
+        placeholder="blur"
+    />
+</Box>
+```
+
+### Chakra UI integration with responsive sizing
+
+This is the most common use case and it is more difficult. You need to use `fill={true}` prop. There are a few considerations:
+
+-   **Parent must assign position `relative` `fixed` or `absolute`**
+-   **Remember to set `objectFit` to your desired value**. E.g. `style={{objectFit: "contain" }}`
+-   **Size of the parent component must be possible to be computed on Server**. In some cases, you will need to provide detailed media queries to achieve your desired UI while using Next Image.
+
+The following code will not work:
+
+```tsx
+<Stack id="parent">
+    <Box id="sibling">Size of sibling fully determined by content</Box>
+    <Box id="image" w={{ base: "100%", sm: "100%", md: "50%" }} h="100%" position="relative">
+        <NextImage
+            src={localImage}
+            alt="Steps Image"
+            fill={true}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            style={{ zIndex: 1, objectFit: "contain" }}
+            placeholder="blur"
+        />
+    </Box>
+</Stack>
+```
+
+Without specific height or width `parent` size will be determined by content. `sibling` size is also determined by content. Thus, image `Box` size cannot be determined before rendering on client and the code will not work.
+
+You will need to provide detailed media queries to achieve the desired result. This **will** work. Note the change in the image `height` prop:
+
+```tsx
+<Stack id="parent">
+    <Box id="sibling">Size of sibling fully determined by content</Box>
+    <Box
+        id="image"
+        w={{ base: "100%", sm: "100%", md: "50%" }}
+        h={{ base: "400px", sm: "500px", md: "400px", lg: "550px" }}
+        position="relative"
+    >
+        <NextImage
+            src={localImage}
+            alt="Steps Image"
+            fill={true}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            style={{ zIndex: 1, objectFit: "contain" }}
+            placeholder="blur"
+        />
+    </Box>
+</Stack>
+```
+
+## Closing thoughts
+
+I hope this article helps you understand a little bit better the changes in Next Image and some of the pain points, specially when using `fill={true}`. I have seen a lot of people asking questions about this.

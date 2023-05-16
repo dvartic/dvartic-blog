@@ -1,4 +1,4 @@
-import { Heading, Text, Link, Code, ListItem, UnorderedList, OrderedList, Image } from "@chakra-ui/react";
+import { Heading, Text, Link, Code, ListItem, UnorderedList, OrderedList, Image, Divider } from "@chakra-ui/react";
 
 // Sets styles and assigns Chakra components to the next-mdx-remote HTML generator.
 const styles = {
@@ -13,6 +13,7 @@ const styles = {
     li: (props: any) => <ListItem {...props} mt={2} mb={2} />,
     img: (props: any) => <Image {...props} alt="" maxH={96} objectFit="contain" ml="auto" mr="auto" mt={8} mb={8} />,
     pre: (props: any) => <pre display="block" w="100%" mt={8} mb={8} padding={2} {...props} />,
+    Divider: (props: any) => <Divider {...props} />,
 };
 
 export default styles;
