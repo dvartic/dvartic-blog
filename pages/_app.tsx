@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import Layout from "../components/layout";
 import theme from "../src/theme/theme";
 import { AnimatePresence, motion } from "framer-motion";
+import { Analytics } from "@vercel/analytics/react";
 
 // Imports custom CSS stylesheets for later use with rehype-highlight(code highlighting for code blocks)
 import "../styles/atom-one-dark.css";
@@ -30,6 +31,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
                         exit="exit"
                         transition={{ type: "linear", duration: 0.2 }}
                     >
+                        <Analytics />
                         <Component {...pageProps} />
                     </motion.main>
                 </Layout>
